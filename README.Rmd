@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-![R package - fort](https://img.shields.io/badge/package-fort-blue?logo=r)
+![](https://img.shields.io/badge/package-fort-blue?logo=r)
 
 <!-- badges: end -->
 

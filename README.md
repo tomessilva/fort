@@ -5,11 +5,7 @@
 
 <!-- badges: start -->
 
-<figure>
-<img src="https://img.shields.io/badge/package-fort-blue?logo=r"
-alt="R package - fort" />
-<figcaption aria-hidden="true">R package - fort</figcaption>
-</figure>
+![](https://img.shields.io/badge/package-fort-blue?logo=r)
 
 <!-- badges: end -->
 
@@ -45,11 +41,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>             [,1]       [,2]        [,3]        [,4]
-#> [1,] -0.88213943 0.45899830  0.05379707  0.09086504
-#> [2,]  0.37597596 0.81637368 -0.34635307 -0.26872968
-#> [3,]  0.09086504 0.05379707 -0.45899830  0.88213943
-#> [4,]  0.26872968 0.34635307  0.81637368  0.37597596
+#>            [,1]       [,2]       [,3]       [,4]
+#> [1,]  0.4458867 -0.6869394  0.4143124 -0.3970447
+#> [2,]  0.7411185  0.3746984  0.2833260  0.4796570
+#> [3,]  0.2833260 -0.4796570 -0.7411185  0.3746984
+#> [4,] -0.4143124 -0.3970447  0.4458867  0.6869394
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
