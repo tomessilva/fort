@@ -28,8 +28,7 @@ devtools::install_github("tomessilva/fort")
 
 ## Example
 
-This is a basic example which shows you how to solve use `fort` in
-practice:
+This is a basic example which shows you how to use `fort` in practice:
 
 ``` r
 library(fort)
@@ -38,16 +37,17 @@ library(fort)
 #> fort linear operation: R^4 -> [fft2] -> R^4
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>             [,1]        [,2]        [,3]        [,4]
-#> [1,] -0.88761921  0.01567458  0.45223042 -0.08587254
-#> [2,]  0.06054031 -0.88556424  0.06288605 -0.45624137
-#> [3,]  0.45223042  0.08587254  0.88761921  0.01567458
-#> [4,]  0.06288605  0.45624137 -0.06054031 -0.88556424
-inverse_transform <- solve(fast_transform) # get inverse transform
-(inverse_transform %*% new_matrix) # should approximately recover the identity matrix
-#>               [,1]          [,2]         [,3]          [,4]
-#> [1,]  1.000000e+00  6.206323e-17 5.551115e-17 -1.243221e-19
-#> [2,]  0.000000e+00  1.000000e+00 0.000000e+00  0.000000e+00
-#> [3,] -5.551115e-17 -1.243221e-19 1.000000e+00 -6.206323e-17
-#> [4,]  0.000000e+00  0.000000e+00 0.000000e+00  1.000000e+00
+#>              [,1]        [,2]         [,3]        [,4]
+#> [1,]  0.307407541 -0.10261378  0.944572587  0.05247517
+#> [2,] -0.944572587  0.05247517  0.307407541  0.10261378
+#> [3,] -0.115222662 -0.68752202  0.002639952 -0.71695902
+#> [4,] -0.002639952 -0.71695902 -0.115222662  0.68752202
+(inverse_transform <- solve(fast_transform)) # get inverse transform
+#> fort linear operation (inverted): R^4 <- [fft2] <- R^4
+round(inverse_transform %*% new_matrix,16) # should recover the identity matrix
+#>        [,1]   [,2]   [,3]   [,4]
+#> [1,]  1e+00 -2e-16 -1e-16  3e-16
+#> [2,] -1e-16  1e+00  1e-16 -2e-16
+#> [3,]  1e-16  3e-16  1e+00  2e-16
+#> [4,]  1e-16  2e-16  1e-16  1e+00
 ```

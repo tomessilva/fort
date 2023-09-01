@@ -34,7 +34,7 @@ devtools::install_github("tomessilva/fort")
 
 ## Example
 
-This is a basic example which shows you how to solve use `fort` in practice:
+This is a basic example which shows you how to use `fort` in practice:
 
 ```{r example}
 library(fort)
@@ -42,7 +42,7 @@ library(fort)
 (fast_transform <- fort(4)) # fast orthogonal transform from R^4 to R^4
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-inverse_transform <- solve(fast_transform) # get inverse transform
-(inverse_transform %*% new_matrix) # should approximately recover the identity matrix
+(inverse_transform <- solve(fast_transform)) # get inverse transform
+round(inverse_transform %*% new_matrix,16) # should recover the identity matrix
 ```
 
