@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+![R package - fort](https://img.shields.io/badge/package-fort-blue?logo=r)
+
 <!-- badges: end -->
 
 The `fort` package provides convenient access to fast structured random linear transforms that are (at least approximately) orthogonal or semi-orthogonal, and generally faster than matrix multiplication (in the style of the Fastfood Transform), implemented in C++ (via Rcpp).
@@ -46,7 +48,7 @@ matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 
-round(inverse_transform %*% new_matrix,12) # should recover the identity matrix
+round(inverse_transform %*% new_matrix, 12) # should recover the identity matrix
 ```
 
 Here is a comparison of using a `fort` transform against a simple matrix multiplication, in terms of speed:

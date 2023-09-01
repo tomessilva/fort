@@ -4,6 +4,13 @@
 # fort ~ fast orthogonal random transforms in R
 
 <!-- badges: start -->
+
+<figure>
+<img src="https://img.shields.io/badge/package-fort-blue?logo=r"
+alt="R package - fort" />
+<figcaption aria-hidden="true">R package - fort</figcaption>
+</figure>
+
 <!-- badges: end -->
 
 The `fort` package provides convenient access to fast structured random
@@ -38,16 +45,16 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>               [,1]          [,2]       [,3]       [,4]
-#> [1,]  0.1030361614 -0.3225887119  0.9246726 -0.1740709
-#> [2,] -0.9409141919  0.0007456451  0.0418444 -0.3360491
-#> [3,]  0.3225887119  0.1030361614 -0.1740709 -0.9246726
-#> [4,] -0.0007456451 -0.9409141919 -0.3360491 -0.0418444
+#>             [,1]       [,2]        [,3]        [,4]
+#> [1,] -0.88213943 0.45899830  0.05379707  0.09086504
+#> [2,]  0.37597596 0.81637368 -0.34635307 -0.26872968
+#> [3,]  0.09086504 0.05379707 -0.45899830  0.88213943
+#> [4,]  0.26872968 0.34635307  0.81637368  0.37597596
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
 
-round(inverse_transform %*% new_matrix,12) # should recover the identity matrix
+round(inverse_transform %*% new_matrix, 12) # should recover the identity matrix
 #>      [,1] [,2] [,3] [,4]
 #> [1,]    1    0    0    0
 #> [2,]    0    1    0    0
