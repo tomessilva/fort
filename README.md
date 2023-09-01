@@ -12,7 +12,7 @@
 The `fort` package provides convenient access to fast structured random
 linear transforms that are (at least approximately) orthogonal or
 semi-orthogonal, and generally faster than matrix multiplication (in the
-style of the Fastfood Transform), implemented in C++ (via Rcpp).
+style of the Fastfood transform), implemented in C++ (via Rcpp).
 
 Useful for algorithms that require or benefit from uncorrelated random
 projections, such as fast dimensionality reduction (e.g.,
@@ -29,6 +29,11 @@ You can install the development version of `fort` from
 devtools::install_github("tomessilva/fort")
 ```
 
+Note: you will need to have the `Rcpp` and `RcppArmadillo` packages
+installed, as well as a working [build
+environment](https://cran.r-project.org/bin/windows/Rtools/) (to compile
+the C++ code), in order to install a development version of `fort`.
+
 ## Example
 
 This is a basic example which shows how to use `fort` in practice:
@@ -41,11 +46,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>            [,1]       [,2]       [,3]       [,4]
-#> [1,]  0.4458867 -0.6869394  0.4143124 -0.3970447
-#> [2,]  0.7411185  0.3746984  0.2833260  0.4796570
-#> [3,]  0.2833260 -0.4796570 -0.7411185  0.3746984
-#> [4,] -0.4143124 -0.3970447  0.4458867  0.6869394
+#>            [,1]        [,2]       [,3]        [,4]
+#> [1,] -0.2355925 -0.27726276 -0.1701804 -0.91578391
+#> [2,] -0.1701804  0.91578391  0.2355925 -0.27726276
+#> [3,]  0.2787310  0.29044076 -0.9153381  0.01045798
+#> [4,]  0.9153381  0.01045798  0.2787310 -0.29044076
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
@@ -79,3 +84,39 @@ system.time(for (i in 1:100) test <- slow_transform %*% matrix_to_transform, gcF
 #>   user  system elapsed 
 #>  70.57    0.61   77.95 
 ```
+
+Note: in this case, using a `fort` fast transform leads to a speed-up of
+about 10x compared to the use of matrix multiplication.
+
+## References
+
+- [Random projection
+  (Wikipedia)](https://en.wikipedia.org/wiki/Random_projection)
+
+- [Johnson-Lindenstrauss lemma
+  (Wikipedia)](https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma)
+
+- Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. “[The
+  unreasonable effectiveness of structured random orthogonal
+  embeddings.](https://web.archive.org/web/20230210084852/https://proceedings.neurips.cc/paper/2017/file/bf8229696f7a3bb4700cfddef19fa23f-Paper.pdf)”,
+  NIPS (2017).
+
+- Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski,
+  Daniel N. Holtmann-Rice, and Sanjiv Kumar. “[Orthogonal random
+  features.](https://web.archive.org/web/20230730083009/https://proceedings.neurips.cc/paper_files/paper/2016/file/53adaf494dc89ef7196d73636eb2451b-Paper.pdf)”,
+  NIPS (2016).
+
+- Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas.
+  “[ACDC: A structured efficient linear
+  layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)”,
+  arXiv:1511.05946 (2015).
+
+- Quoc Le, TamÃ¡s SarlÃ³s and Alex Smola. “[Fastfood - approximating
+  kernel expansions in loglinear
+  time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)”,
+  ICML (2013).
+
+- Ali Rahimi, and Benjamin Recht. “[Random features for large-scale
+  kernel
+  machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)”,
+  NIPS (2007).
