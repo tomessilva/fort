@@ -34,15 +34,38 @@ devtools::install_github("tomessilva/fort")
 
 ## Example
 
-This is a basic example which shows you how to use `fort` in practice:
+This is a basic example which shows how to use `fort` in practice:
 
 ```{r example}
 library(fort)
 
 (fast_transform <- fort(4)) # fast orthogonal transform from R^4 to R^4
+
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
+
 (inverse_transform <- solve(fast_transform)) # get inverse transform
-round(inverse_transform %*% new_matrix,16) # should recover the identity matrix
+
+round(inverse_transform %*% new_matrix,12) # should recover the identity matrix
 ```
 
+Here is a comparison of using a `fort` transform against a simple matrix multiplication, in terms of speed:
+
+``` r 
+library(fort)
+
+matrix_to_transform <- diag(1024) # 1024 x 1024 identity matrix
+
+fast_transform <- fort(1024) # fast orthogonal transform from R^1024 to R^1024
+slow_transform <- as.matrix(fast_transform) # the same, but in matrix form
+
+# time it takes for the fast transform
+system.time(for (i in 1:100) test <- fast_transform %*% matrix_to_transform, gcFirst = TRUE)
+#>   user  system elapsed 
+#>   5.50    2.12    8.00
+
+# time it takes for the equivalent slow transform (via matrix multiplication)
+system.time(for (i in 1:100) test <- slow_transform %*% matrix_to_transform, gcFirst = TRUE)
+#>   user  system elapsed 
+#>  70.57    0.61   77.95 
+```
