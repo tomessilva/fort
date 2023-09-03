@@ -2,11 +2,13 @@
 # fort package - fort() helper function ----
 #
 
-#' Create a fast orthogonal random transform
+#' Create a Fast Orthogonal Random Transform
 #'
-#' `fort()` creates an object (that inherits from class `FastTransform`) which represents a fast random
-#' orthogonal \eqn{\mathbb{R}^{dim\_in} \to \mathbb{R}^{dim\_out}} linear transform  (the specific type
-#' being defined by the `type` parameter).
+#' `fort()` creates an object (that inherits from class [FastTransform]) which represents a fast random
+#' \eqn{\mathbb{R}^{dim\_in} \to \mathbb{R}^{dim\_out}} linear transform. This transform will be
+#' orthonormal when \eqn{dim\_in = dim\_out} \emph{and} they are a power of 2, and approximately
+#' orthogonal or semi-orthogonal (in the sense that either \eqn{W^T W \approx I_{dim\_in}} or
+#' \eqn{W W^T \approx I_{dim\_out}}, if \eqn{W} represents the transform) otherwise.
 #'
 #' @param dim_in Either a scalar indicating the input dimensionality, or a vector of length 2 indicating
 #'  the input and output dimensionality of the transform (if dim_out is not specified).
@@ -19,22 +21,30 @@
 #' @param cache_matrix Logical that controls whether matrices are cached when as.matrix() is called;
 #'   should be set to FALSE if saving memory is important (optional, default = TRUE).
 #' @param seed If set, defines the seed used to generate the random transform (optional, default = NULL).
-#'
 #' @return An object of a class inherits from class `FastTransform` and which represents a fast linear
 #'   transform.
 #'
 #' @details
-#' The goal of `fort()` is to provide an easy and efficient way of calculating fast random rotations (when
-#' `dim_in` is the same as `dim_out`) or orthogonal transforms (when `dim_in` is different from `dim_out`)
-#' within R, by using a process based on fast linear transforms (such as FFT) to avoid matrix
-#' multiplications, thus reducing the computational complexity of rotating an N-dimensional vector
-#' from \eqn{O(N^{2})} to \eqn{O(N \space log \space N)}.
+#' The goal of `fort()` is to provide an easy and efficient way of calculating fast orthogonal random
+#' transforms (when `dim_in` is the same as `dim_out`) or semi-orthogonal transforms (when `dim_in` is
+#' different from `dim_out`) within R, by using fast structured transforms (like the Fast Fourier
+#' Transform or the Fast Walsh-Hadamard Transform) to avoid matrix multiplications, in the same spirit
+#' as the Fastfood (Rahimi et al. (2007)), ACDC (Moczulski et al. (2015)), HD (Yu et al. (2016)) and
+#' SD (Choromanski et al. (2017)) families of random structured transforms.
+#'
+#' @section The `type` parameter:
+#'
+#' information here
+#'
+#'  based on fast linear transforms (such as FFT) to avoid
+#' matrix multiplications, thus reducing the computational complexity of rotating an N-dimensional vector
+#' from \eqn{O(N^{2})} to \eqn{O(N \mathrm{log} N)}.
 #'
 #' The specific method used depends on the value passed in the `type` parameter, but all methods rely
 #' on alternating between applying permutations (complexity \eqn{O(N)}), diagonal scaling matrices
 #' (complexity \eqn{O(N)}) and structured fast linear transforms (such as the Fast Fourier Transform or
 #' the Fast Walsh-Hadamard Transform, which can be implemented with complexity
-#' \eqn{O(N \space log \space N)}).
+#' \eqn{O(N \mathrm{log} N)}).
 #'
 #' More specifically, the `default` type (i.e., `fft2` type) applies the following set of operations to
 #' each input (column) vector:
@@ -45,6 +55,8 @@
 #'   and \eqn{D_i} represent diagonal matrices of random unitary complex values;
 #'   \item Unpack complex vector \eqn{y} to real vector and permute/contract (\eqn{P_2}) rows.
 #' }
+#'
+#' @section Using `fort` transforms:
 #'
 #' In practice, to apply the fast transform to the columns of a matrix, you should use the `%*%` operator
 #' as if the output of `fort()` was a matrix (e.g., `fort(4,6) %*% matrix(1:12,4,3)` will output a 6 by 3
@@ -60,15 +72,15 @@
 #'
 #' @examples
 #' fort(16) # a random orthogonal transform from R^16 to R^16
-#' fort(5,33) # a random transform from R^5 to R^33
-#' fort(c(5,33)) # same as previous line
+#' fort(5, 33) # a random transform from R^5 to R^33
+#' fort(c(5, 33)) # same as previous line
 #' # apply a random orthogonal transformation to the canonical R^4 basis
 #' fort(4) %*% diag(4)
-fort <- function(dim_in,dim_out=NULL,type="default",min_blocksize=0,cache_matrix=TRUE,seed=NULL) {
+fort <- function(dim_in, dim_out = NULL, type = "default", min_blocksize = 0, cache_matrix = TRUE, seed = NULL) {
   # parse/validate inputs here
-  dims <- .get_dims_from_inputs(dim_in=dim_in,dim_out=dim_out,min_blocksize=min_blocksize)
+  dims <- .get_dims_from_inputs(dim_in = dim_in, dim_out = dim_out, min_blocksize = min_blocksize)
   # validate type and get correct fort constructor for that type
-  make_fort <- .get_fort_constructor(fort_type=type)
+  make_fort <- .get_fort_constructor(fort_type = type)
   # set seed for reproducibility, if requested
   if (!is.null(seed)) {
     current_seed <- .Random.seed # record current seed
@@ -78,10 +90,9 @@ fort <- function(dim_in,dim_out=NULL,type="default",min_blocksize=0,cache_matrix
     set.seed(seed)
   }
   # create new fort with appropriate settings
-  new_fort <- make_fort(dim_in=dims$dim_in,dim_out=dims$dim_out,blocksize=dims$blocksize)
+  new_fort <- make_fort(dim_in = dims$dim_in, dim_out = dims$dim_out, blocksize = dims$blocksize)
   # set rest of fields
   if (!cache_matrix) new_fort$cache_matrix <- FALSE
   # return created object
   new_fort
 }
-
