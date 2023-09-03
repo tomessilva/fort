@@ -15,31 +15,35 @@
 #' @export
 #'
 #' @examples
-#' Z <- fort(4,1024)
-#' Z %*% matrix(1:2,4,3) # output is a 1024 by 3 matrix
+#' Z <- fort(4, 1024)
+#' Z %*% matrix(1:2, 4, 3) # output is a 1024 by 3 matrix
 #' # the example below works: y is assumed to be a single column vector
 #' Z %*% 1:4 # output is a 1024 by 1 matrix
 `%*%.FastTransform` <- function(x, y) {
-  if (!(is.numeric(y)||is.matrix(y))) stop("the second argument to the %**% operator must be numerical")
+  if (!(is.numeric(y) || is.matrix(y))) stop("the second argument to the %**% operator must be numerical")
   x_dim_in <- x$get_ncol()
   if (!is.matrix(y)) {
     # handle vector inputs
     if (length(y) == x_dim_in) {
       # assume column vector
-      y <- matrix(y,ncol=1)
+      y <- matrix(y, ncol = 1)
     } else {
       if (x_dim_in == 1) {
         # assume row vector
-        y <- matrix(y,nrow=1)
+        y <- matrix(y, nrow = 1)
       } else {
         # non-conformable
         stop(paste0("the number of rows of the second argument of %**% must be ", x_dim_in, " (and not
-                    1 or ",length(y)))
+                    1 or ", length(y)))
       }
     }
   }
-  if (x_dim_in != nrow(y)) stop(paste0("the number of rows of the second argument of %**% must be ",
-                                       x_dim_in, " (and not ",nrow(y),")"))
+  if (x_dim_in != nrow(y)) {
+    stop(paste0(
+      "the number of rows of the second argument of %**% must be ",
+      x_dim_in, " (and not ", nrow(y), ")"
+    ))
+  }
   x$evaluate(y)
 }
 
@@ -56,8 +60,8 @@
 #' @export
 #'
 #' @examples
-#' dim(fort(3,17)) # should return c(17,3)
-#' dim(t(fort(3,17))) # should return c(3,17)
+#' dim(fort(3, 17)) # should return c(17,3)
+#' dim(t(fort(3, 17))) # should return c(3,17)
 dim.FastTransform <- function(x) {
   x$get_dim()
 }
@@ -73,12 +77,12 @@ dim.FastTransform <- function(x) {
 #' @export
 #'
 #' @examples
-#' fast_transform <- fort(4,15)
+#' fast_transform <- fort(4, 15)
 #' slow_transform <- as.matrix(fast_transform)
 #' fast_result <- fast_transform %*% diag(4)
 #' slow_result <- slow_transform %*% diag(4)
 #' norm(fast_result - slow_result) # should be small
-as.matrix.FastTransform <- function(x,...) {
+as.matrix.FastTransform <- function(x, ...) {
   x$as_matrix()
 }
 
@@ -94,8 +98,8 @@ as.matrix.FastTransform <- function(x,...) {
 #' @export
 #'
 #' @examples
-#' summary(fort(3,17))
-summary.FastTransform <- function(object,...) {
+#' summary(fort(3, 17))
+summary.FastTransform <- function(object, ...) {
   object$summary()
 }
 
@@ -140,7 +144,7 @@ determinant.FastTransform <- function(x, logarithm = TRUE, ...) {
 #' @examples
 #' (a <- fort(4))
 #' (b <- t(t(a))) # transpose a twice
-#'  # the result below should be close to zero
+#' # the result below should be close to zero
 #' sum((a %*% diag(4) - b %*% diag(4))^2)
 t.FastTransform <- function(x) {
   if (!x$invertible) {
@@ -169,7 +173,7 @@ t.FastTransform <- function(x) {
 #' a <- fort(4)
 #' inv_a <- solve(a) # inverse of a
 #' inv_a %*% diag(4) # applying the inverse of a
-#' solve(a,diag(4)) # should give the same output
+#' solve(a, diag(4)) # should give the same output
 solve.FastTransform <- function(a, b, ...) {
   # get generalized inverse
   inverse_transform <- a$get_inverse()
