@@ -23,14 +23,22 @@
 #' @export
 #'
 #' @examples
-#' Z <- fort(4,1024)
-#' Z %*% matrix(1:2,4,3) # output is a 1024 by 3 matrix
-#' Z %***% matrix(1:2,4,3) # output is also a 1024 by 3 matrix
+#' Z <- fort(4, 1024)
+#' Z %*% matrix(1:2, 4, 3) # output is a 1024 by 3 matrix
+#' Z %***% matrix(1:2, 4, 3) # output is also a 1024 by 3 matrix
 `%***%` <- function(x, y) {
   # note: no validation whatsoever of either of the inputs
   if (x$inverse) {
-    x$rev_eval(y)
+    # evaluate inverse
+    if (x$invertible) {
+      # evaluate inverse normally
+      x$rev_eval(y)
+    } else {
+      # use matrix form to calculate inverse
+      x$as_matrix() %*% y
+    }
   } else {
+    # evaluate transform normally
     x$fwd_eval(y)
   }
 }
