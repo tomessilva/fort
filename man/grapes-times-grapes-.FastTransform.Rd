@@ -18,8 +18,8 @@ A numeric (real) matrix with the same number of columns as \code{y}.
 Applies a fast transform created by \code{fort()} (\code{x}) to the columns of a conformable matrix (\code{y}).
 }
 \examples{
-Z <- fort(4,1024)
-Z \%*\% matrix(1:2,4,3) # output is a 1024 by 3 matrix
+Z <- fort(4, 1024)
+Z \%*\% matrix(1:2, 4, 3) # output is a 1024 by 3 matrix
 # the example below works: y is assumed to be a single column vector
 Z \%*\% 1:4 # output is a 1024 by 1 matrix
 }

@@ -21,6 +21,6 @@ will be returned, with a warning.
 \examples{
 (a <- fort(4))
 (b <- t(t(a))) # transpose a twice
- # the result below should be close to zero
+# the result below should be close to zero
 sum((a \%*\% diag(4) - b \%*\% diag(4))^2)
 }

@@ -27,5 +27,5 @@ a \code{FastTransform} object corresponding to the inverse (or a generalized inv
 a <- fort(4)
 inv_a <- solve(a) # inverse of a
 inv_a \%*\% diag(4) # applying the inverse of a
-solve(a,diag(4)) # should give the same output
+solve(a, diag(4)) # should give the same output
 }

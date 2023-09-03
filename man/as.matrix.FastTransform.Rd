@@ -18,7 +18,7 @@ A \code{matrix} object equivalent to x.
 Converts a fast transform created by \code{fort()} to the equivalent matrix form.
 }
 \examples{
-fast_transform <- fort(4,15)
+fast_transform <- fort(4, 15)
 slow_transform <- as.matrix(fast_transform)
 fast_result <- fast_transform \%*\% diag(4)
 slow_result <- slow_transform \%*\% diag(4)

@@ -26,9 +26,9 @@ function on \emph{pre-validated} inputs.
 It is \emph{not} recommended that this operator is used interactively and/or on non-validated inputs.
 }
 \examples{
-Z <- fort(4,1024)
-Z \%*\% matrix(1:2,4,3) # output is a 1024 by 3 matrix
-Z \%***\% matrix(1:2,4,3) # output is also a 1024 by 3 matrix
+Z <- fort(4, 1024)
+Z \%*\% matrix(1:2, 4, 3) # output is a 1024 by 3 matrix
+Z \%***\% matrix(1:2, 4, 3) # output is also a 1024 by 3 matrix
 }
 \seealso{
 \code{\link[=fort]{fort()}}, \code{\link{\%*\%.FastTransform}}

@@ -19,5 +19,5 @@ Provides a summary of a fast transform created by \code{fort()} with slightly mo
 information provided by using \code{print()}.
 }
 \examples{
-summary(fort(3,17))
+summary(fort(3, 17))
 }

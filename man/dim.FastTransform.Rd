@@ -19,6 +19,6 @@ columns of an equivalent matrix). It returns the same value that one would get f
 but much more efficiently.
 }
 \examples{
-dim(fort(3,17)) # should return c(17,3)
-dim(t(fort(3,17))) # should return c(3,17)
+dim(fort(3, 17)) # should return c(17,3)
+dim(t(fort(3, 17))) # should return c(3,17)
 }
