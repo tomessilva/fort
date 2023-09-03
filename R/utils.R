@@ -2,6 +2,36 @@
 # fort package - utility functions ----
 #
 
+#' Title
+#'
+#' @param x
+#' @param y
+#'
+#' @return
+#' @export
+#'
+#' @examples
+.are_similar_ft <- function(x, y, tolerance = 10^-6) {
+  # objects are assumed to have been pre-validated using .is_valid_ft()
+  out_val <- FALSE
+  attr(out_val, "reason") <- "critical error"
+  # only the most important fields are compared, to save time
+  fields_to_compare <- c("dim_in", "dim_out", "blocksize", "cache_matrix",
+                         "fort_type", "inverse", "invertible", "fwd_par")
+  for (i in 1:length(fields_to_compare)) {
+    cur_field <- fields_to_compare[i]
+    if (!isTRUE(all.equal(x[[cur_field]], y[[cur_field]], tolerance = tolerance))) {
+      attr(out_val, "reason") <- paste0("discrepancy in field '",
+                                        cur_field, "'")
+      return(out_val)
+    }
+  }
+  # all tests passed: objects are similar
+  out_val <- TRUE
+  attr(out_val, "reason") <- "objects are similar"
+  out_val
+}
+
 #' Generates a random permutation/expansion/contraction of the appropriate size
 #'
 #' If dim_in == dim_out, it generates a permutation; if dim_in > dim_out, it generates
@@ -12,17 +42,19 @@
 #'
 #' @return A vector of integers representing a permutation/contraction/expansion
 #' @noRd
-.get_random_permutation <- function(dim_in,dim_out) {
+.get_random_permutation <- function(dim_in, dim_out) {
   if (dim_in < dim_out) {
     # expansion
     # dim_out is assumed to be a power of 2
     n_base_reps <- floor(dim_out / dim_in)
     n_additional <- dim_out - n_base_reps * dim_in
-    sample(c(rep(1:dim_in, n_base_reps),
-             sample(1:dim_in, size = n_additional)))
+    sample(c(
+      rep(1:dim_in, n_base_reps),
+      sample(1:dim_in, size = n_additional)
+    ))
   } else {
     # permutation or contraction
-    sample(1:dim_in,size=dim_out)
+    sample(1:dim_in, size = dim_out)
   }
 }
 
@@ -34,7 +66,7 @@
 #'
 #' @return a list with fields 'dim_in', 'dim_out' and 'blocksize'
 #' @noRd
-.get_dims_from_inputs <- function(dim_in,dim_out=NULL,min_blocksize=0) {
+.get_dims_from_inputs <- function(dim_in, dim_out = NULL, min_blocksize = 0) {
   # validate and determine dim_in and dim_out
   if (!is.numeric(dim_in)) stop("the first argument of fort() must be numeric")
   # determine dim_in and dim_out
@@ -51,13 +83,13 @@
     dim_out_ <- dim_out[1]
   }
   if (!((dim_in_ > 0) && (dim_out_ > 0))) {
-    stop("dim_in and dim_out must be positive")
+    stop("dim_in and dim_out must be positive when calling fort()")
   }
   # define blocksize based on dim_in, dim_out and min_blocksize
   # (making sure it is a power of 2 and above 2)
-  blocksize <- 2 ^ ceiling(log(max(2, dim_in_, dim_out_, min_blocksize, na.rm = TRUE)) / log(2))
+  blocksize <- 2^ceiling(log(max(2, dim_in_, dim_out_, min_blocksize, na.rm = TRUE)) / log(2))
   # return validated inputs
-  list(dim_in=dim_in_,dim_out=dim_out_,blocksize=blocksize)
+  list(dim_in = dim_in_, dim_out = dim_out_, blocksize = blocksize)
 }
 
 #' Get an appropriate constructor function for a certain fort type
@@ -71,49 +103,54 @@
 #' @return constructor function that can be called to obtain an object of type fort_type
 #' @noRd
 .get_fort_constructor <- function(fort_type) {
-  available_methods <- c("default","fft2")
+  available_methods <- c("default", "fft2")
   if (is.character(fort_type)) {
     switch(fort_type[1],
-           default=FastTransformFFT2$new,
-           fft2=FastTransformFFT2$new,
-           {
-             error_message <- paste0(fort_type[1],
-                                     " is not a valid value for the 'type' field when",
-                                     " calling fort(); please choose one of: ",
-                                     paste0(available_methods,collapse=", "))
-             # check if it is the name of an existing FastTransform method
-             if (exists(fort_type[1])) {
-               # the object exists, so get it...
-               target_obj <- get(fort_type[1])
-               # ...and check if it is an R6ClassGenerator
-               if (!inherits(target_obj,"R6ClassGenerator")) stop(error_message)
-               # if it is, pass its constructor function
-               return(target_obj$new)
-             } else {
-               stop(error_message)
-             }
-           }
-
+      default = FastTransformFFT2$new,
+      fft2 = FastTransformFFT2$new,
+      {
+        error_message <- paste0(
+          "'",fort_type[1],"'",
+          " is not a valid value for the 'type' field when",
+          " calling fort(); please choose one of: ",
+          paste0(available_methods, collapse = ", ")
+        )
+        # check if it is the name of an existing FastTransform method
+        if (exists(fort_type[1])) {
+          # the object exists, so get it...
+          target_obj <- get(fort_type[1])
+          # ...and check if it is an R6ClassGenerator
+          if (!inherits(target_obj, "R6ClassGenerator")) stop(error_message)
+          # if it is, pass its constructor function
+          return(target_obj$new)
+        } else {
+          stop(error_message)
+        }
+      }
     )
   } else {
     if (is.numeric(fort_type)) {
-      error_message <- paste0(fort_type[1],
-                              " is not a valid value for the 'type' field when",
-                              " calling fort(); please choose one of: ",
-                              paste0(available_methods,collapse=", "))
+      error_message <- paste0(
+        "'",fort_type[1],"'",
+        " is not a valid value for the 'type' field when",
+        " calling fort(); please choose one of: ",
+        paste0(available_methods, collapse = ", ")
+      )
       stop(error_message)
     } else {
       if (is.function(fort_type)) {
         # input is a function: assume it is a valid constructor function, and just return it
         fort_type
       } else {
-        if (inherits(fort_type,"FastTransform")) {
+        if (inherits(fort_type, "FastTransform")) {
           # input is a FastTransform; return its constructor function
           fort_type$new
         } else {
-          error_message <- paste0("invalid value provided for the 'type' field when",
-                                  " calling fort(); please choose one of: ",
-                                  paste0(available_methods,collapse=", "))
+          error_message <- paste0(
+            "invalid value provided for the 'type' field when",
+            " calling fort(); please choose one of: ",
+            paste0(available_methods, collapse = ", ")
+          )
           stop(error_message)
         }
       }
@@ -140,14 +177,18 @@
   }
   if (simple_) {
     # use 7-bit ASCII
-    s_list <- list(arrows = c("->", "<-"),
-                   real = "R", complex = "C",
-                   times = "x")
+    s_list <- list(
+      arrows = c("->", "<-"),
+      real = "R", complex = "C",
+      times = "x"
+    )
   } else {
     # use UTF-8
-    s_list <- list(arrows = c("\u2192", "\u2190"),
-                   real = "\u211d", complex = "\u2102",
-                   times = "\u00d7")
+    s_list <- list(
+      arrows = c("\u2192", "\u2190"),
+      real = "\u211d", complex = "\u2102",
+      times = "\u00d7"
+    )
   }
   s_list
 }
@@ -161,9 +202,9 @@
 .pseudoinvert_scaling <- function(scaling_vector) {
   # calculates "the" pseudoinverse of a scaling vector
   # also works for complex scalings (i.e. rotations)
-  x_ <- 1/scaling_vector # just invert element-wise
+  x_ <- 1 / scaling_vector # just invert element-wise
   # ensure that zeros get mapped back to a zero
-  is_zero <- (!(Mod(scaling_vector)>0))|(!is.finite(x_))
+  is_zero <- (!(Mod(scaling_vector) > 0)) | (!is.finite(x_))
   if (any(is_zero)) x_[is_zero] <- 0
   x_
 }
@@ -196,14 +237,14 @@
       # the permutation is actually an expansion
       # so just take the minimal required set
       p_size <- length(unique(permutation))
-      p_ <- rep(NA,p_size)
+      p_ <- rep(NA, p_size)
       for (i in 1:p_size) {
         target_idx <- ((1:length(permutation))[permutation == i])[1] # get first option
         p_[i] <- target_idx # assign it
       }
     } else {
       # the permutation is actually a permutation, so just use the sorting method
-      p_ <- sort.int(permutation,index.return=TRUE)$ix
+      p_ <- sort.int(permutation, index.return = TRUE)$ix
     }
   }
   p_
