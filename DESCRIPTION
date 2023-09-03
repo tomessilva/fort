@@ -1,22 +1,31 @@
 Package: fort
 Type: Package
 Title: Fast Orthogonal Random Transforms in R
-Version: 0.8.1
-Date: 2023-08-29
+Version: 0.0.1
 Authors@R: 
     person("Tom\u00e9", "Silva", email = "tome@tomesilva.com",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-9434-8686"))
-Description: The fort package provides convenient access to fast structured random linear transforms
-  that are (at least approximately) orthogonal or semi-orthogonal, and generally faster than matrix
-  multiplication (in the style of the Fastfood Transform), implemented in C++ (via Rcpp). Useful for
-  algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality
-  reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks).
+           role = c("cre", "aut"), comment = c(ORCID = "0000-0002-9434-8686"))
+Description: Provides convenient access to fast structured random linear
+    transforms that are (at least approximately) orthogonal or
+    semi-orthogonal, and generally faster than matrix multiplication
+    (in the style of the Fastfood Transform), implemented in C++
+    (via 'Rcpp'). Useful for algorithms that require or benefit from
+    uncorrelated random projections, such as fast dimensionality reduction
+    (e.g., Johnson-Lindenstrauss transform) or kernel approximation
+    (e.g., random kitchen sinks) methods.
 License: MIT + file LICENSE
-Imports: 
-    MASS,
-    R6,
-    Rcpp (>= 1.0.10)
+Imports: MASS, R6, Rcpp (>= 1.0.10)
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
+Author: Tomé Silva [cre, aut] (<https://orcid.org/0000-0002-9434-8686>)
+Maintainer: Tomé Silva <tome@tomesilva.com>
+URL: https://github.com/tomessilva/fort
+BugReports: https://github.com/tomessilva/fort/issues
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
