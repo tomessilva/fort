@@ -8,4 +8,3 @@
 #' @importFrom MASS ginv
 #' @exportPattern "^[[:alpha:]]+"
 NULL
-
