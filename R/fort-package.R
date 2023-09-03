@@ -1,3 +1,7 @@
+#
+# fort package - internal documentation file ----
+#
+
 #' @keywords internal
 #' @aliases NULL
 #' @aliases fort-package
