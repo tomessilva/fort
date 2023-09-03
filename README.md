@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fort ~ fast orthogonal random transforms in R
+# fort ♖ fast orthogonal random transforms
 
 <!-- badges: start -->
 
-![](https://img.shields.io/badge/package-fort-blue?logo=r)
+[![](https://img.shields.io/badge/package-fort-blue?logo=r)](https://github.com/tomessilva/fort)
 
 <!-- badges: end -->
 
@@ -17,7 +17,7 @@ style of the Fastfood transform), implemented in C++ (via Rcpp).
 Useful for algorithms that require or benefit from uncorrelated random
 projections, such as fast dimensionality reduction (e.g.,
 Johnson-Lindenstrauss transform) or kernel approximation (e.g., random
-kitchen sinks).
+kitchen sinks) methods.
 
 ## Installation
 
@@ -46,11 +46,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>            [,1]        [,2]       [,3]        [,4]
-#> [1,] -0.2355925 -0.27726276 -0.1701804 -0.91578391
-#> [2,] -0.1701804  0.91578391  0.2355925 -0.27726276
-#> [3,]  0.2787310  0.29044076 -0.9153381  0.01045798
-#> [4,]  0.9153381  0.01045798  0.2787310 -0.29044076
+#>            [,1]       [,2]       [,3]       [,4]
+#> [1,] -0.1079702 -0.4394886 -0.6079204 -0.6523994
+#> [2,] -0.2202388 -0.8641106  0.3056421  0.3337524
+#> [3,] -0.4394886  0.1079702  0.6523994 -0.6079204
+#> [4,]  0.8641106 -0.2202388  0.3337524 -0.3056421
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
@@ -88,6 +88,10 @@ system.time(for (i in 1:100) test <- slow_transform %*% matrix_to_transform, gcF
 Note: in this case, using a `fort` fast transform leads to a speed-up of
 about 10x compared to the use of matrix multiplication.
 
+## License
+
+MIT
+
 ## References
 
 - [Random projection
@@ -111,7 +115,7 @@ about 10x compared to the use of matrix multiplication.
   layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)”,
   arXiv:1511.05946 (2015).
 
-- Quoc Le, TamÃ¡s SarlÃ³s and Alex Smola. “[Fastfood - approximating
+- Quoc Le, Tamás Sarlós and Alex Smola. “[Fastfood - approximating
   kernel expansions in loglinear
   time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)”,
   ICML (2013).

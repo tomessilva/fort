@@ -13,17 +13,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-# fort ~ fast orthogonal random transforms in R
+# fort &#x2656; fast orthogonal random transforms
 
 <!-- badges: start -->
 
-![](https://img.shields.io/badge/package-fort-blue?logo=r)
+[![](https://img.shields.io/badge/package-fort-blue?logo=r)](https://github.com/tomessilva/fort)
 
 <!-- badges: end -->
 
 The `fort` package provides convenient access to fast structured random linear transforms that are (at least approximately) orthogonal or semi-orthogonal, and generally faster than matrix multiplication (in the style of the Fastfood transform), implemented in C++ (via Rcpp).
 
-Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks).
+Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks) methods.
 
 ## Installation
 
@@ -81,6 +81,10 @@ system.time(for (i in 1:100) test <- slow_transform %*% matrix_to_transform, gcF
 Note: in this case, using a `fort` fast transform leads to a speed-up of
 about 10x compared to the use of matrix multiplication.
 
+## License
+
+MIT
+
 ## References
 
  - [Random projection (Wikipedia)](https://en.wikipedia.org/wiki/Random_projection)
@@ -93,6 +97,6 @@ about 10x compared to the use of matrix multiplication.
  
  - Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. "[ACDC: A structured efficient linear layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)", arXiv:1511.05946 (2015).
 
- - Quoc Le, TamÃ¡s SarlÃ³s and Alex Smola. "[Fastfood - approximating kernel expansions in loglinear time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)", ICML (2013).
+ - Quoc Le, Tam&#225;s Sarl&#243;s and Alex Smola. "[Fastfood - approximating kernel expansions in loglinear time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)", ICML (2013).
 
  - Ali Rahimi, and Benjamin Recht. "[Random features for large-scale kernel machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)", NIPS (2007).
