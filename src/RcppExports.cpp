@@ -11,6 +11,36 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// FORT_CPP_FFT1_fwd
+arma::mat FORT_CPP_FFT1_fwd(const arma::mat& X_Re, const arma::mat& X_Im, const arma::vec& s1, const arma::vec& s2, const arma::vec& s3, const arma::vec& s4);
+RcppExport SEXP _fort_FORT_CPP_FFT1_fwd(SEXP X_ReSEXP, SEXP X_ImSEXP, SEXP s1SEXP, SEXP s2SEXP, SEXP s3SEXP, SEXP s4SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X_Re(X_ReSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X_Im(X_ImSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s2(s2SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s3(s3SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s4(s4SEXP);
+    rcpp_result_gen = Rcpp::wrap(FORT_CPP_FFT1_fwd(X_Re, X_Im, s1, s2, s3, s4));
+    return rcpp_result_gen;
+END_RCPP
+}
+// FORT_CPP_FFT1_rev
+arma::mat FORT_CPP_FFT1_rev(const arma::mat& X_Re, const arma::mat& X_Im, const arma::vec& s1, const arma::vec& s2, const arma::vec& s3, const arma::vec& s4);
+RcppExport SEXP _fort_FORT_CPP_FFT1_rev(SEXP X_ReSEXP, SEXP X_ImSEXP, SEXP s1SEXP, SEXP s2SEXP, SEXP s3SEXP, SEXP s4SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X_Re(X_ReSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X_Im(X_ImSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s1(s1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s2(s2SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s3(s3SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type s4(s4SEXP);
+    rcpp_result_gen = Rcpp::wrap(FORT_CPP_FFT1_rev(X_Re, X_Im, s1, s2, s3, s4));
+    return rcpp_result_gen;
+END_RCPP
+}
 // FORT_CPP_FFT2_fwd
 arma::mat FORT_CPP_FFT2_fwd(const arma::mat& X_Re, const arma::mat& X_Im, const arma::vec& s1, const arma::vec& s2, const arma::vec& s3, const arma::vec& s4, const arma::vec& s5, const arma::vec& s6);
 RcppExport SEXP _fort_FORT_CPP_FFT2_fwd(SEXP X_ReSEXP, SEXP X_ImSEXP, SEXP s1SEXP, SEXP s2SEXP, SEXP s3SEXP, SEXP s4SEXP, SEXP s5SEXP, SEXP s6SEXP) {
@@ -47,6 +77,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_fort_FORT_CPP_FFT1_fwd", (DL_FUNC) &_fort_FORT_CPP_FFT1_fwd, 6},
+    {"_fort_FORT_CPP_FFT1_rev", (DL_FUNC) &_fort_FORT_CPP_FFT1_rev, 6},
     {"_fort_FORT_CPP_FFT2_fwd", (DL_FUNC) &_fort_FORT_CPP_FFT2_fwd, 8},
     {"_fort_FORT_CPP_FFT2_rev", (DL_FUNC) &_fort_FORT_CPP_FFT2_rev, 8},
     {NULL, NULL, 0}
