@@ -5,7 +5,7 @@
 \alias{fort-package}
 \title{fort: Fast Orthogonal Random Transforms in R}
 \description{
-Provides convenient access to fast structured random linear transforms that are (at least approximately) orthogonal or semi-orthogonal, and generally faster than matrix multiplication (in the style of the Fastfood Transform), implemented in C++ (via 'Rcpp'). Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks) methods.
+Provides convenient access to fast structured random linear transforms implemented in C++ (via 'Rcpp') that are (at least approximately) orthogonal or semi-orthogonal, and often much faster than matrix multiplication. Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks) methods.
 }
 \seealso{
 Useful links:

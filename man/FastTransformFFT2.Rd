@@ -9,9 +9,31 @@
 \code{FastTransformFFT2} subclass
 }
 \details{
-A specific implementation of a structured fast transform. Inherits from \code{FastTransform}.
+A specific implementation of a structured fast transform. Inherits from \link{FastTransform}.
 
-Add additional details here.
+In particular, the \code{fft2} type applies the following set of operations to each input (column) vector:
+
+\enumerate{
+\item Permute/expand (\eqn{P_1}) rows and pack them into a complex vector \eqn{x};
+\item Apply a \eqn{y = D_3 F D_2 F D_1 x} linear transform, where \eqn{F} represents a complex FFT,
+and \eqn{D_i} represent diagonal matrices of random unitary complex values;
+\item Unpack complex vector \eqn{y} to real vector and permute/contract (\eqn{P_2}) rows.
+}
+
+Note that this transform will be orthonormal only when \eqn{dim\_in = dim\_out = blocksize} (in which case,
+both \eqn{P_1} and \eqn{P_2} are permutations).
+
+Otherwise, when \eqn{dim\_in < blocksize}, \eqn{P_1} represents an expansion (rather than a permutation),
+and when \eqn{dim\_out < blocksize}, \eqn{P_2} represents a contraction/decimation (rather than a
+permutation). When both of these conditions are true, the resulting transform will \emph{not} be exactly
+orthogonal or semi-orthogonal, but the rows and columns of the transform are still going to be generally
+uncorrelated.
+
+It is \strong{not} recommended that the methods described below are called directly. Instead,
+use the methods described in the \code{\link[=fort]{fort()}} documentation, if possible.
+}
+\seealso{
+\code{\link[=fort]{fort()}}, \link{FastTransform}
 }
 \section{Super class}{
 \code{\link[fort:FastTransform]{fort::FastTransform}} -> \code{FastTransformFFT2}
@@ -78,7 +100,8 @@ A matrix with the same number of columns as \code{x}.
 \subsection{Method \code{fwd_eval()}}{
 Function that performs the forward transform.
 Do \emph{not} call this directly unless you know what you are doing:
-use the \code{FastTransform$evaluate()} method instead.
+use the \code{\link{\%*\%.FastTransform}} or \code{\link[=FastTransform$evaluate]{FastTransform$evaluate()}}
+methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$fwd_eval(x)}\if{html}{\out{</div>}}
 }
@@ -100,7 +123,8 @@ A matrix with the same number of columns as \code{x}.
 \subsection{Method \code{rev_eval()}}{
 Function that performs the inverse transform.
 Do \emph{not} call this directly unless you know what you are doing:
-use the \code{FastTransform$evaluate()} method instead.
+use the \code{\link{\%*\%.FastTransform}} or \code{\link[=FastTransform$evaluate]{FastTransform$evaluate()}}
+methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$rev_eval(x)}\if{html}{\out{</div>}}
 }
@@ -123,11 +147,15 @@ A matrix with the same number of columns as \code{x}.
 Function that calculates and caches the parameters
 for the inverse transform. Do not call this directly unless you
 know what you are doing. If you need the inverse transform, use
-the \code{FastTransform$get_inverse()} method instead.
+the \code{\link{solve.FastTransform}} or \code{\link[=FastTransform$get_inverse]{FastTransform$get_inverse()}}
+methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$calculate_rev_par()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+Itself (invisibly).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FastTransformFFT2-clone"></a>}}
