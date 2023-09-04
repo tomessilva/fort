@@ -21,9 +21,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-The `fort` package provides convenient access to fast structured random linear transforms that are (at least approximately) orthogonal or semi-orthogonal, and generally faster than matrix multiplication (in the style of the Fastfood transform), implemented in C++ (via Rcpp).
+The `fort` package provides convenient access to fast structured random linear transforms implemented in C++ (via 'Rcpp') that are (at least approximately) orthogonal or semi-orthogonal, and often much faster than matrix multiplication, in the same spirit as the [Fastfood](#ref4), [ACDC](#ref3), [HD](#ref2) and [SD](#ref1) families of random structured transforms.
 
-Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation (e.g., random kitchen sinks) methods.
+Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., [Johnson-Lindenstrauss transform](#links)) or kernel approximation (e.g., [random kitchen sinks](#ref5)) methods.
 
 ## Installation
 
@@ -85,18 +85,20 @@ about 10x compared to the use of matrix multiplication.
 
 MIT
 
-## References
+## [Useful links]{#links}
 
  - [Random projection (Wikipedia)](https://en.wikipedia.org/wiki/Random_projection)
 
  - [Johnson-Lindenstrauss lemma (Wikipedia)](https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma)
 
- - Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. "[The unreasonable effectiveness of structured random orthogonal embeddings.](https://web.archive.org/web/20230210084852/https://proceedings.neurips.cc/paper/2017/file/bf8229696f7a3bb4700cfddef19fa23f-Paper.pdf)", NIPS (2017).
+## References
 
- - Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski, Daniel N. Holtmann-Rice, and Sanjiv Kumar. "[Orthogonal random features.](https://web.archive.org/web/20230730083009/https://proceedings.neurips.cc/paper_files/paper/2016/file/53adaf494dc89ef7196d73636eb2451b-Paper.pdf)", NIPS (2016).
+ 1) [Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. "[The unreasonable effectiveness of structured random orthogonal embeddings.](https://web.archive.org/web/20230210084852/https://proceedings.neurips.cc/paper/2017/file/bf8229696f7a3bb4700cfddef19fa23f-Paper.pdf)", NIPS (2017).]{#ref1}
+
+ 2) [Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski, Daniel N. Holtmann-Rice, and Sanjiv Kumar. "[Orthogonal random features.](https://web.archive.org/web/20230730083009/https://proceedings.neurips.cc/paper_files/paper/2016/file/53adaf494dc89ef7196d73636eb2451b-Paper.pdf)", NIPS (2016).]{#ref2}
  
- - Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. "[ACDC: A structured efficient linear layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)", arXiv:1511.05946 (2015).
+ 3) [Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. "[ACDC: A structured efficient linear layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)", arXiv:1511.05946 (2015).]{#ref3}
 
- - Quoc Le, Tam&#225;s Sarl&#243;s and Alex Smola. "[Fastfood - approximating kernel expansions in loglinear time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)", ICML (2013).
+ 4) [Quoc Le, Tam&#225;s Sarl&#243;s and Alex Smola. "[Fastfood - approximating kernel expansions in loglinear time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)", ICML (2013).]{#ref4}
 
- - Ali Rahimi, and Benjamin Recht. "[Random features for large-scale kernel machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)", NIPS (2007).
+ 5) [Ali Rahimi, and Benjamin Recht. "[Random features for large-scale kernel machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)", NIPS (2007).]{#ref5}

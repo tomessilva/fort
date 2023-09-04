@@ -10,14 +10,16 @@
 <!-- badges: end -->
 
 The `fort` package provides convenient access to fast structured random
-linear transforms that are (at least approximately) orthogonal or
-semi-orthogonal, and generally faster than matrix multiplication (in the
-style of the Fastfood transform), implemented in C++ (via Rcpp).
+linear transforms implemented in C++ (via ‘Rcpp’) that are (at least
+approximately) orthogonal or semi-orthogonal, and often much faster than
+matrix multiplication, in the same spirit as the [Fastfood](#ref4),
+[ACDC](#ref3), [HD](#ref2) and [SD](#ref1) families of random structured
+transforms.
 
 Useful for algorithms that require or benefit from uncorrelated random
 projections, such as fast dimensionality reduction (e.g.,
-Johnson-Lindenstrauss transform) or kernel approximation (e.g., random
-kitchen sinks) methods.
+[Johnson-Lindenstrauss transform](#links)) or kernel approximation
+(e.g., [random kitchen sinks](#ref5)) methods.
 
 ## Installation
 
@@ -46,11 +48,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>            [,1]       [,2]       [,3]       [,4]
-#> [1,] -0.1079702 -0.4394886 -0.6079204 -0.6523994
-#> [2,] -0.2202388 -0.8641106  0.3056421  0.3337524
-#> [3,] -0.4394886  0.1079702  0.6523994 -0.6079204
-#> [4,]  0.8641106 -0.2202388  0.3337524 -0.3056421
+#>             [,1]        [,2]        [,3]        [,4]
+#> [1,]  0.03490048  0.03162059  0.30914272 -0.94984887
+#> [2,]  0.84469519 -0.26437471  0.43554881  0.16399170
+#> [3,]  0.30914272  0.94984887 -0.03490048  0.03162059
+#> [4,] -0.43554881  0.16399170  0.84469519  0.26437471
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
@@ -92,7 +94,7 @@ about 10x compared to the use of matrix multiplication.
 
 MIT
 
-## References
+## <span id="links">Useful links</span>
 
 - [Random projection
   (Wikipedia)](https://en.wikipedia.org/wiki/Random_projection)
@@ -100,27 +102,31 @@ MIT
 - [Johnson-Lindenstrauss lemma
   (Wikipedia)](https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma)
 
-- Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. “[The
-  unreasonable effectiveness of structured random orthogonal
-  embeddings.](https://web.archive.org/web/20230210084852/https://proceedings.neurips.cc/paper/2017/file/bf8229696f7a3bb4700cfddef19fa23f-Paper.pdf)”,
-  NIPS (2017).
+## References
 
-- Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski,
-  Daniel N. Holtmann-Rice, and Sanjiv Kumar. “[Orthogonal random
-  features.](https://web.archive.org/web/20230730083009/https://proceedings.neurips.cc/paper_files/paper/2016/file/53adaf494dc89ef7196d73636eb2451b-Paper.pdf)”,
-  NIPS (2016).
+1)  <span id="ref1">Krzysztof M. Choromanski, Mark Rowland, and Adrian
+    Weller. “[The unreasonable effectiveness of structured random
+    orthogonal
+    embeddings.](https://web.archive.org/web/20230210084852/https://proceedings.neurips.cc/paper/2017/file/bf8229696f7a3bb4700cfddef19fa23f-Paper.pdf)”,
+    NIPS (2017).</span>
 
-- Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas.
-  “[ACDC: A structured efficient linear
-  layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)”,
-  arXiv:1511.05946 (2015).
+2)  <span id="ref2">Felix Xinnan X. Yu, Ananda Theertha Suresh,
+    Krzysztof M. Choromanski, Daniel N. Holtmann-Rice, and Sanjiv Kumar.
+    “[Orthogonal random
+    features.](https://web.archive.org/web/20230730083009/https://proceedings.neurips.cc/paper_files/paper/2016/file/53adaf494dc89ef7196d73636eb2451b-Paper.pdf)”,
+    NIPS (2016).</span>
 
-- Quoc Le, Tamás Sarlós and Alex Smola. “[Fastfood - approximating
-  kernel expansions in loglinear
-  time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)”,
-  ICML (2013).
+3)  <span id="ref3">Marcin Moczulski, Misha Denil, Jeremy Appleyard, and
+    Nando de Freitas. “[ACDC: A structured efficient linear
+    layer.](https://web.archive.org/web/20221206143544/https://arxiv.org/pdf/1511.05946.pdf)”,
+    arXiv:1511.05946 (2015).</span>
 
-- Ali Rahimi, and Benjamin Recht. “[Random features for large-scale
-  kernel
-  machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)”,
-  NIPS (2007).
+4)  <span id="ref4">Quoc Le, Tamás Sarlós and Alex Smola. “[Fastfood -
+    approximating kernel expansions in loglinear
+    time.](https://web.archive.org/web/20230518190102/https://proceedings.mlr.press/v28/le13-supp.pdf)”,
+    ICML (2013).</span>
+
+5)  <span id="ref5">Ali Rahimi, and Benjamin Recht. “[Random features
+    for large-scale kernel
+    machines](http://web.archive.org/web/20230316191621/https://proceedings.neurips.cc/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf)”,
+    NIPS (2007).</span>
