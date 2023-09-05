@@ -2,11 +2,10 @@
 # test - fort() helper function
 #
 
-n_tests <- 7
-fort_types <- c("default","fft2")
-
 test_that("first two arguments handled correctly (dim_in == dim_out)",{
   test_seed <- 1 * pi
+  n_tests <- 2
+  fort_types <- names(.get_available_fort_types())
   for (i in 1:length(fort_types)) {
     cur_type <- fort_types[i]
     for (j in 1:n_tests) {
@@ -44,6 +43,8 @@ test_that("first two arguments handled correctly (dim_in == dim_out)",{
 
 test_that("first two arguments handled correctly (dim_in < dim_out)",{
   test_seed <- 2 * pi
+  n_tests <- 2
+  fort_types <- names(.get_available_fort_types())
   for (i in 1:length(fort_types)) {
     cur_type <- fort_types[i]
     for (j in 1:n_tests) {
@@ -71,6 +72,8 @@ test_that("first two arguments handled correctly (dim_in < dim_out)",{
 
 test_that("first two arguments handled correctly (dim_in > dim_out)",{
   test_seed <- 3 * pi
+  n_tests <- 2
+  fort_types <- names(.get_available_fort_types())
   for (i in 1:length(fort_types)) {
     cur_type <- fort_types[i]
     for (j in 1:n_tests) {
@@ -96,8 +99,36 @@ test_that("first two arguments handled correctly (dim_in > dim_out)",{
   }
 })
 
+test_that("'cache_matrix' argument is being respected",{
+  cur_seed <- 4 * pi
+
+  # test cache_matrix = FALSE
+  a1 <- fort(16, 16, seed = cur_seed, cache_matrix = FALSE)
+  expect_true(is.null(a1$fwd_mtrx), "a1's initial fwd_mtrx is not NULL")
+  expect_true(is.null(a1$rev_mtrx), "a1's initial rev_mtrx is not NULL")
+  irrelevant <- as.matrix(a1) # matrix should NOT be cached here
+  expect_true(is.null(a1$fwd_mtrx), "a1 is storing fwd_mtrx (when it shouldn't)")
+  a1_inv <- solve(a1) # get inverse transform
+  irrelevant <- as.matrix(a1_inv) # matrix should NOT be cached here
+  expect_true(is.null(a1$rev_mtrx), "a1_inv is storing rev_mtrx (when it shouldn't)")
+
+  # test cache_matrix = TRUE
+  a2 <- fort(16, 16, seed = cur_seed, cache_matrix = TRUE)
+  expect_true(is.null(a2$fwd_mtrx), "a2's initial fwd_mtrx is not NULL")
+  expect_true(is.null(a2$rev_mtrx), "a2's initial rev_mtrx is not NULL")
+  irrelevant <- as.matrix(a2) # matrix SHOULD be cached here
+  expect_false(is.null(a2$fwd_mtrx), "a2 is NOT storing fwd_mtrx (when it should)")
+  expect_true(is.matrix(a2$fwd_mtrx), "a2 is NOT storing fwd_mtrx (when it should)")
+  a2_inv <- solve(a2) # get inverse transform
+  irrelevant <- as.matrix(a2_inv) # matrix SHOULD be cached here
+  expect_false(is.null(a2$fwd_mtrx), "a2_inv is NOT storing rev_mtrx (when it should)")
+  expect_true(is.matrix(a2$fwd_mtrx), "a2_inv is NOT storing rev_mtrx (when it should)")
+})
+
 test_that("different seeds result in different transforms",{
-  test_seed <- 4 * pi
+  test_seed <- 5 * pi
+  n_tests <- 2
+  fort_types <- names(.get_available_fort_types())
   for (i in 1:length(fort_types)) {
     cur_type <- fort_types[i]
     for (j in 1:n_tests) {
@@ -119,13 +150,13 @@ test_that("different seeds result in different transforms",{
       cond <- .are_similar_ft(a1, a2)
       expect_false(cond, paste0("a1 and a2 are similar, even though they were",
                                 "generated with different seeds (reason:",
-                                attr(cond, "reason"), cur_state, ")"))
+                                attr(cond, "reason"),cur_state,")"))
     }
   }
 })
 
 test_that("error handling is working correctly",{
-  cur_seed <- 5 * pi
+  cur_seed <- 6 * pi
   # invalid dimensions
   expect_error(fort(0, seed = cur_seed),
                "dim_in and dim_out must be positive when calling fort()")
@@ -141,16 +172,10 @@ test_that("error handling is working correctly",{
   expect_error(fort(64, type = "invalid input", seed = cur_seed))
   cur_seed <- cur_seed + 1
   expect_error(fort(33, 22, type = list(), seed = cur_seed))
-  # invalid value for the 'min_blocksize' field
 
   # invalid value for the 'cache_matrix' field
-
+  cur_seed <- cur_seed + 1
+  expect_error(fort(11, 5, cache_matrix = "invalid input", seed = cur_seed))
+  cur_seed <- cur_seed + 1
+  expect_error(fort(4, 10, cache_matrix = list(), seed = cur_seed))
 })
-
-#test_that("'cache_matrix' argument is being respected",{
-#  cur_seed <- 6 * pi
-#})
-
-#test_that("'min_blocksize' argument is being respected",{
-#  cur_seed <- 7 * pi
-#})
