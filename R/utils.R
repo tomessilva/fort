@@ -2,15 +2,57 @@
 # fort package - utility functions ----
 #
 
-#' Title
+#' Get list of available fort types
 #'
-#' @param x
-#' @param y
+#' Takes the default list of available fort types and
+#' adds any other types defined in .Options$fort.type_list
 #'
-#' @return
-#' @export
+#' The format (of both .Options$fort.type_list) and the
+#' return value of this function is a *named* list, where each
+#' element is a character vector of length 1 indicating the name
+#' of the corresponding `FastTransform` subclass.
 #'
-#' @examples
+#' @return A named list of available fort types.
+#' @noRd
+.get_available_fort_types <- function() {
+  base_types <- list(
+    # here is the default list of available methods
+    default = "FastTransformFFT2",
+    # fft1 = "FastTransformFFT1",
+    fft2 = "FastTransformFFT2"
+  )
+  if ("fort.type_list" %in% names(.Options)) {
+    # extra types have been defined by the user
+    # add extra fort types to base list
+    # overwriting existing ones, if needed
+    new_types <- getOption("fort.type_list")
+    if (!is.list(new_types)) stop("malformed .Options$fort.type_list",
+                                  " (needs to be a list)")
+    for (i in 1:length(new_types)) {
+      cur_type <- names(new_types)[i]
+      cur_value <- new_types[[i]]
+      if (!is.character(cur_value)) stop("malformed field '", cur_type,
+                                         "' in .Options$fort.type_list",
+                                         " (needs to be of character type)")
+      if (cur_value == "FastTransform") stop("the general `FastTransform`",
+                                             " class cannot be used in",
+                                             " .Options$fort.type_list")
+      base_types[[cur_type]] <- cur_value
+    }
+  }
+  base_types
+}
+
+#' Test whether two FastTransform objects are roughly similar
+#'
+#' Only compares a subset of all fields, for efficiency.
+#'
+#' @param x A pre-validated FastTransform object.
+#' @param y Another pre-validated FastTransform object.
+#' @param tolerance Numeric that defines the tolerance used for `all.equal()`
+#'
+#' @return Logical. TRUE if the two objects are roughly similar.
+#' @noRd
 .are_similar_ft <- function(x, y, tolerance = 10^-6) {
   # objects are assumed to have been pre-validated using .is_valid_ft()
   out_val <- FALSE
@@ -32,7 +74,7 @@
   out_val
 }
 
-#' Generates a random permutation/expansion/contraction of the appropriate size
+#' Generate a random permutation/expansion/contraction of the appropriate size
 #'
 #' If dim_in == dim_out, it generates a permutation; if dim_in > dim_out, it generates
 #' a contraction; if dim_in < dim_out, it generates an expansion.
@@ -103,59 +145,51 @@
 #' @return constructor function that can be called to obtain an object of type fort_type
 #' @noRd
 .get_fort_constructor <- function(fort_type) {
-  available_methods <- c("default", "fft2")
+  available_methods <- .get_available_fort_types()
   if (is.character(fort_type)) {
-    switch(fort_type[1],
-      default = FastTransformFFT2$new,
-      fft2 = FastTransformFFT2$new,
-      {
-        error_message <- paste0(
-          "'",fort_type[1],"'",
-          " is not a valid value for the 'type' field when",
-          " calling fort(); please choose one of: ",
-          paste0(available_methods, collapse = ", ")
-        )
-        # check if it is the name of an existing FastTransform method
-        if (exists(fort_type[1])) {
-          # the object exists, so get it...
-          target_obj <- get(fort_type[1])
-          # ...and check if it is an R6ClassGenerator
-          if (!inherits(target_obj, "R6ClassGenerator")) stop(error_message)
-          # if it is, pass its constructor function
-          return(target_obj$new)
-        } else {
-          stop(error_message)
-        }
-      }
-    )
-  } else {
-    if (is.numeric(fort_type)) {
-      error_message <- paste0(
-        "'",fort_type[1],"'",
-        " is not a valid value for the 'type' field when",
-        " calling fort(); please choose one of: ",
-        paste0(available_methods, collapse = ", ")
-      )
-      stop(error_message)
+    if (fort_type %in% names(available_methods)) {
+      # if input is a known alias
+      subclass_name <- available_methods[[fort_type]]
     } else {
-      if (is.function(fort_type)) {
-        # input is a function: assume it is a valid constructor function, and just return it
-        fort_type
-      } else {
-        if (inherits(fort_type, "FastTransform")) {
-          # input is a FastTransform; return its constructor function
-          fort_type$new
-        } else {
-          error_message <- paste0(
-            "invalid value provided for the 'type' field when",
-            " calling fort(); please choose one of: ",
-            paste0(available_methods, collapse = ", ")
-          )
-          stop(error_message)
-        }
-      }
+      # possibly the name of a valid subclass
+      subclass_name <- fort_type
     }
+    # check if subclass exists and is valid
+    if (exists(subclass_name)) {
+      out_subclass <- get(subclass_name) # get subclass
+      if (inherits(out_subclass, "R6ClassGenerator")) {
+        # the object is actually a class generator
+        # so, return its constructor method
+        return(out_subclass$new)
+      } else {
+        # object is NOT a class constructor
+        error_message <- paste0("invalid `type` when calling fort(), since '",
+                                fort_type, "' is not a valid 'FastTransform'",
+                                " subclass; please choose one of: ",
+                                paste0(available_methods, collapse = ", "))
+      }
+    } else {
+      # object does not even exist
+      error_message <- paste0("invalid `type` when calling fort(), since '",
+                              fort_type, "' does not exist; please ",
+                              "choose one of: ",
+                              paste0(available_methods, collapse = ", "))
+    }
+    stop(error_message)
+  } else if (inherits(fort_type, "R6ClassGenerator")) {
+    # assume it is a valid class generator for a
+    # subclass that inherits from FastTransform, and
+    # return its constructor
+    return(fort_type$new)
+  } else if (is.function(fort_type)) {
+    # assume a valid constructor function is being
+    # passed directly, so just return it
+    return(fort_type)
   }
+  error_message <- paste0("invalid `type` when calling fort(); please ",
+                          "choose one of: ",
+                          paste0(available_methods, collapse = ", "))
+  stop(error_message)
 }
 
 #' Get a set of symbols to be used when printing FastTransform objects
