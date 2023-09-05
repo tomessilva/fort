@@ -9,7 +9,6 @@ fort(
   dim_in,
   dim_out = NULL,
   type = "default",
-  min_blocksize = 0,
   cache_matrix = TRUE,
   seed = NULL
 )
@@ -23,9 +22,6 @@ first parameter is a vector of length 2).}
 
 \item{type}{A string indicating the type of transform to use (optional); current valid options are:
 \code{fft2} (i.e. \code{default}).}
-
-\item{min_blocksize}{A numeric value indicating the minimum blocksize of the transform (optional,
-default = 0).}
 
 \item{cache_matrix}{Logical that controls whether matrices are cached when as.matrix() is called;
 should be set to FALSE if saving memory is important (optional, default = TRUE).}
