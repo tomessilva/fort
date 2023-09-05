@@ -56,8 +56,6 @@
 #'   first parameter is a vector of length 2).
 #' @param type A string indicating the type of transform to use (optional); current valid options are:
 #'  `fft2` (i.e. `default`).
-#' @param min_blocksize A numeric value indicating the minimum blocksize of the transform (optional,
-#'   default = 0).
 #' @param cache_matrix Logical that controls whether matrices are cached when as.matrix() is called;
 #'   should be set to FALSE if saving memory is important (optional, default = TRUE).
 #' @param seed If set, defines the seed used to generate the random transform (optional, default = NULL).
@@ -82,9 +80,9 @@
 #' fort(c(5, 33)) # same as previous line
 #' # apply a random orthogonal transformation to the canonical R^4 basis
 #' fort(4) %*% diag(4)
-fort <- function(dim_in, dim_out = NULL, type = "default", min_blocksize = 0, cache_matrix = TRUE, seed = NULL) {
-  # parse/validate inputs here
-  dims <- .get_dims_from_inputs(dim_in = dim_in, dim_out = dim_out, min_blocksize = min_blocksize)
+fort <- function(dim_in, dim_out = NULL, type = "default", cache_matrix = TRUE, seed = NULL) {
+  # parse/validate inputs
+  dims <- .get_dims_from_inputs(dim_in = dim_in, dim_out = dim_out, min_blocksize = 0)
   # validate type and get correct fort constructor for that type
   make_fort <- .get_fort_constructor(fort_type = type)
   # set seed for reproducibility, if requested
