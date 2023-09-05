@@ -30,7 +30,8 @@ orthogonal or semi-orthogonal, but the rows and columns of the transform are sti
 uncorrelated.
 
 It is \strong{not} recommended that the methods described below are called directly. Instead,
-use the methods described in the \code{\link[=fort]{fort()}} documentation, if possible.
+use the methods described in the \code{\link[=fort]{fort()}} documentation, if possible, unless you positively need
+low-level access (e.g., to speed up computation on \emph{pre-validated} inputs).
 }
 \seealso{
 \code{\link[=fort]{fort()}}, \link{FastTransform}
@@ -72,8 +73,9 @@ use the methods described in the \code{\link[=fort]{fort()}} documentation, if p
 \if{latex}{\out{\hypertarget{method-FastTransformFFT2-new}{}}}
 \subsection{Method \code{new()}}{
 Object creation function. It is recommended
-to call the \code{fort()} function with \code{type = "FastTransformFFT2"}
-instead of this method.
+to call the \code{fort()} function with \code{type = "FastTransformFFT2"},
+instead of this method, since \emph{no input validation is
+performed by this method}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$new(dim_in, dim_out, blocksize)}\if{html}{\out{</div>}}
 }
@@ -154,7 +156,7 @@ methods instead.
 }
 
 \subsection{Returns}{
-Itself (invisibly).
+The object itself (invisibly).
 }
 }
 \if{html}{\out{<hr>}}
