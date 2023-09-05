@@ -155,7 +155,7 @@ FastTransformFFT2 <- R6::R6Class(
     #'   know what you are doing. If you need the inverse transform, use
     #'   the [`solve.FastTransform`] or [FastTransform$get_inverse()]
     #'   methods instead.
-    #' @return Itself (invisibly).
+    #' @return The object itself (invisibly).
     calculate_rev_par = function() {
       # original has nine parameters:
       #  * p1_re, p1_im
