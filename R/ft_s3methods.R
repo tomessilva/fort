@@ -20,30 +20,6 @@
 #' # the example below works: y is assumed to be a single column vector
 #' Z %*% 1:4 # output is a 1024 by 1 matrix
 `%*%.FastTransform` <- function(x, y) {
-  if (!(is.numeric(y) || is.matrix(y))) stop("the second argument to the %**% operator must be numerical")
-  x_dim_in <- x$get_ncol()
-  if (!is.matrix(y)) {
-    # handle vector inputs
-    if (length(y) == x_dim_in) {
-      # assume column vector
-      y <- matrix(y, ncol = 1)
-    } else {
-      if (x_dim_in == 1) {
-        # assume row vector
-        y <- matrix(y, nrow = 1)
-      } else {
-        # non-conformable
-        stop(paste0("the number of rows of the second argument of %**% must be ", x_dim_in, " (and not
-                    1 or ", length(y)))
-      }
-    }
-  }
-  if (x_dim_in != nrow(y)) {
-    stop(paste0(
-      "the number of rows of the second argument of %**% must be ",
-      x_dim_in, " (and not ", nrow(y), ")"
-    ))
-  }
   x$evaluate(y)
 }
 
