@@ -97,7 +97,39 @@ FastTransform <- R6::R6Class(
     #' x %*% y # y transformed by x
     #' y |> x$evaluate() # same as previous line
     evaluate = function(x) {
-      # add validation
+      # validate self (quick validation)
+      is_valid_ft <- .is_valid_ft(self, quick = TRUE)
+      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
+                                    attr(is_valid_ft, "reason"), ")"))
+      # validate input
+      if (!(is.numeric(x) || is.matrix(x))) stop("you can only apply a ",
+                                                 "'FastTransform' to a ",
+                                                 "numerical object")
+      # check conformity of input
+      x_dim_in <- self$get_ncol()
+      if (!is.matrix(x)) {
+        # handle vector inputs
+        if (length(x) == x_dim_in) {
+          # assume column vector
+          x <- matrix(x, ncol = 1)
+        } else {
+          if (x_dim_in == 1) {
+            # assume row vector
+            x <- matrix(x, nrow = 1)
+          } else {
+            # non-conformable
+            stop(paste0("the input to the transform must have ", x_dim_in,
+                        " rows (and not 1 or ", length(x), ")"))
+          }
+        }
+      }
+      if (x_dim_in != nrow(x)) {
+        stop(paste0(
+          "the number of rows of the input to the transform must be ",
+          x_dim_in, " (and not ", nrow(x), ")"
+        ))
+      }
+      # perform evaluation
       if (self$inverse) {
         # evaluate inverse
         if (self$invertible) {
@@ -164,6 +196,11 @@ FastTransform <- R6::R6Class(
     #'   object.
     #' @return A new object of type `FastTransform`.
     get_inverse = function() {
+      # validate self (quick validation)
+      is_valid_ft <- .is_valid_ft(self, quick = TRUE)
+      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
+                                    attr(is_valid_ft, "reason"), ")"))
+      # get inverse transform
       if (self$inverse) {
         # if already in inverse form...
         # just clone object and set inverse to FALSE
@@ -296,6 +333,13 @@ FastTransform <- R6::R6Class(
     #'   represented by this object.
     #' @return A matrix.
     as_matrix = function() {
+      # validate self (quick validation)
+      is_valid_ft <- .is_valid_ft(self, quick = TRUE)
+      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
+                                    attr(is_valid_ft, "reason"), ")"))
+
+      # calculate matrix form of transform
+
       is_inverse <- self$inverse
 
       if (is_inverse) {
@@ -343,6 +387,11 @@ FastTransform <- R6::R6Class(
     #' @description Prints terse information about the object.
     #' @return The object itself (invisibly).
     print = function() {
+      # validate self (quick validation)
+      is_valid_ft <- .is_valid_ft(self, quick = TRUE)
+      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
+                                    attr(is_valid_ft, "reason"), ")"))
+      # print object information
       is_inverse <- self$inverse
       s_ <- .get_printing_symbols()
       s_arrow <- s_[["arrows"]][1 + as.numeric(is_inverse)]
@@ -425,13 +474,26 @@ FastTransform <- R6::R6Class(
 #' @param object Input object to validate.
 #'
 #' @return Logical with (character) 'reason' attribute.
-.is_valid_ft <- function(object) {
+#' @noRd
+.is_valid_ft <- function(object, quick = FALSE) {
   out_val <- FALSE
   attr(out_val, "reason") <- "critical error"
   # verify that object inherits from "FastTransform" class
   if (!inherits(object, "FastTransform")) {
     attr(out_val, "reason") <- "object does not inherit from 'FastTransform'"
     return(out_val)
+  }
+  # verify that the object has NOT been created via FastTransform$new()
+  if (is.null(object$blocksize)) {
+    attr(out_val, "reason") <- paste0("object has been created by call",
+                                      " to 'FastTransform$new()'")
+    return(out_val)
+  }
+  # if 'quick = TRUE', do not perform further testing
+  if (quick) {
+    out_val <- TRUE
+    attr(out_val, "reason") <- "object seems like a valid 'FastTransform'"
+    return(out_val) # do not perform further testing
   }
   # verify existence of important fields
   field_names <- names(object)
