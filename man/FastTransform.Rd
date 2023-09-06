@@ -181,7 +181,8 @@ Evaluates the result of applying the transform represented
 by this object on an input matrix \code{x}. It is important that the
 provided matrix has compatible dimensionality since \emph{no input
 validation is performed}. This method is compatible with the use of
-pipe operators (e.g., \code{\link{|>}}, \code{\link{\%>\%}} or \code{\link{\%<>\%}}).
+pipe operators (e.g., \code{\link{|>}} or \strong{magrittr}'s \verb{\%>\%} and \verb{\%<>\%}
+pipe operators).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransform$evaluate(x)}\if{html}{\out{</div>}}
 }

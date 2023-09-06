@@ -88,7 +88,8 @@ FastTransform <- R6::R6Class(
     #'   by this object on an input matrix `x`. It is important that the
     #'   provided matrix has compatible dimensionality since \emph{no input
     #'   validation is performed}. This method is compatible with the use of
-    #'   pipe operators (e.g., [`|>`], [`%>%`] or [`%<>%`]).
+    #'   pipe operators (e.g., [`|>`] or \strong{magrittr}'s `%>%` and `%<>%`
+    #'   pipe operators).
     #' @param x Input matrix with correct dimensionality.
     #' @return A matrix with the same number of columns as `x`.
     #' @examples

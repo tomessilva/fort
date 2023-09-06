@@ -89,7 +89,7 @@ FastTransformFFT2 <- R6::R6Class(
 
     #' @description Function that performs the forward transform.
     #'   Do \emph{not} call this directly unless you know what you are doing:
-    #'   use the [`%*%.FastTransform`] or [FastTransform$evaluate()]
+    #'   use the [`%*%.FastTransform`] or `FastTransform$evaluate()`
     #'   methods instead.
     #' @param x Input matrix of the \emph{correct} dimensionality
     #' @return A matrix with the same number of columns as `x`.
@@ -116,7 +116,7 @@ FastTransformFFT2 <- R6::R6Class(
 
     #' @description Function that performs the inverse transform.
     #'   Do \emph{not} call this directly unless you know what you are doing:
-    #'   use the [`%*%.FastTransform`] or [FastTransform$evaluate()]
+    #'   use the [`%*%.FastTransform`] or `FastTransform$evaluate()`
     #'   methods instead.
     #' @param x Input matrix of the \emph{correct} dimensionality
     #' @return A matrix with the same number of columns as `x`.
@@ -153,7 +153,7 @@ FastTransformFFT2 <- R6::R6Class(
     #' @description Function that calculates and caches the parameters
     #'   for the inverse transform. Do not call this directly unless you
     #'   know what you are doing. If you need the inverse transform, use
-    #'   the [`solve.FastTransform`] or [FastTransform$get_inverse()]
+    #'   the [`solve.FastTransform`] or `FastTransform$get_inverse()`
     #'   methods instead.
     #' @return The object itself (invisibly).
     calculate_rev_par = function() {

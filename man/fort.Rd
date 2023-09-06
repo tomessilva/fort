@@ -98,7 +98,7 @@ Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. (2017). The unreasona
 
 Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski, Daniel N. Holtmann-Rice, and Sanjiv Kumar. (2016). Orthogonal random features. \emph{Conference and Workshop on Neural Information Processing Systems}. \url{http://papers.neurips.cc/paper/6246-orthogonal-random-features}
 
-Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. (2015). ACDC: A structured efficient linear layer. \url{arXiv:1511.05946}
+Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. (2015). ACDC: A structured efficient linear layer. \url{https://arxiv.org/abs/1511.05946}
 
 Quoc Le, Tamás Sarlós and Alex Smola. (2013). Fastfood - approximating kernel expansions in loglinear time. \emph{International Conference on Machine Learning}. \url{https://proceedings.mlr.press/v28/le13-supp.pdf}
 }

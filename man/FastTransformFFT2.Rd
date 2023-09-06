@@ -102,7 +102,7 @@ A matrix with the same number of columns as \code{x}.
 \subsection{Method \code{fwd_eval()}}{
 Function that performs the forward transform.
 Do \emph{not} call this directly unless you know what you are doing:
-use the \code{\link{\%*\%.FastTransform}} or \code{\link[=FastTransform$evaluate]{FastTransform$evaluate()}}
+use the \code{\link{\%*\%.FastTransform}} or \code{FastTransform$evaluate()}
 methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$fwd_eval(x)}\if{html}{\out{</div>}}
@@ -125,7 +125,7 @@ A matrix with the same number of columns as \code{x}.
 \subsection{Method \code{rev_eval()}}{
 Function that performs the inverse transform.
 Do \emph{not} call this directly unless you know what you are doing:
-use the \code{\link{\%*\%.FastTransform}} or \code{\link[=FastTransform$evaluate]{FastTransform$evaluate()}}
+use the \code{\link{\%*\%.FastTransform}} or \code{FastTransform$evaluate()}
 methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$rev_eval(x)}\if{html}{\out{</div>}}
@@ -149,7 +149,7 @@ A matrix with the same number of columns as \code{x}.
 Function that calculates and caches the parameters
 for the inverse transform. Do not call this directly unless you
 know what you are doing. If you need the inverse transform, use
-the \code{\link{solve.FastTransform}} or \code{\link[=FastTransform$get_inverse]{FastTransform$get_inverse()}}
+the \code{\link{solve.FastTransform}} or \code{FastTransform$get_inverse()}
 methods instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FastTransformFFT2$calculate_rev_par()}\if{html}{\out{</div>}}
