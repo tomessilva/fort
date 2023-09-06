@@ -18,7 +18,7 @@
   base_types <- list(
     # here is the default list of available methods
     default = "FastTransformFFT2",
-    # fft1 = "FastTransformFFT1",
+    fft1 = "FastTransformFFT1",
     fft2 = "FastTransformFFT2"
   )
   if ("fort.type_list" %in% names(.Options)) {
