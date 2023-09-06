@@ -65,7 +65,7 @@
 #' @encoding UTF-8
 #' @references Krzysztof M. Choromanski, Mark Rowland, and Adrian Weller. (2017). The unreasonable effectiveness of structured random orthogonal embeddings. \emph{Conference and Workshop on Neural Information Processing Systems}. <http://papers.neurips.cc/paper/6626-the-unreasonable-effectiveness-of-structured-random-orthogonal-embeddings>
 #' @references Felix Xinnan X. Yu, Ananda Theertha Suresh, Krzysztof M. Choromanski, Daniel N. Holtmann-Rice, and Sanjiv Kumar. (2016). Orthogonal random features. \emph{Conference and Workshop on Neural Information Processing Systems}. <http://papers.neurips.cc/paper/6246-orthogonal-random-features>
-#' @references Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. (2015). ACDC: A structured efficient linear layer. <arXiv:1511.05946>
+#' @references Marcin Moczulski, Misha Denil, Jeremy Appleyard, and Nando de Freitas. (2015). ACDC: A structured efficient linear layer. <https://arxiv.org/abs/1511.05946>
 #' @references Quoc Le, Tamás Sarlós and Alex Smola. (2013). Fastfood - approximating kernel expansions in loglinear time. \emph{International Conference on Machine Learning}. <https://proceedings.mlr.press/v28/le13-supp.pdf>
 #' @seealso
 #'  * How to apply `fort` transforms: [`%*%.FastTransform`]
@@ -87,9 +87,12 @@ fort <- function(dim_in, dim_out = NULL, type = "default", cache_matrix = TRUE, 
   make_fort <- .get_fort_constructor(fort_type = type)
   # set seed for reproducibility, if requested
   if (!is.null(seed)) {
-    current_seed <- .Random.seed # record current seed
-    # add exit handler to restore seed when this function ends
-    on.exit(.Random.seed <<- current_seed, add = TRUE)
+    if (exists(".Random.seed")) {
+      # if there is some previous "seed" state...
+      current_seed <- .Random.seed # record current seed
+      # add exit handler to restore seed when this function ends/fails
+      on.exit(.Random.seed <<- current_seed, add = TRUE)
+    }
     # change seed to the value requested
     set.seed(seed)
   }
