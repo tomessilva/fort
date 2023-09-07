@@ -49,10 +49,10 @@ library(fort)
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
 #>             [,1]        [,2]        [,3]        [,4]
-#> [1,]  0.03490048  0.03162059  0.30914272 -0.94984887
-#> [2,]  0.84469519 -0.26437471  0.43554881  0.16399170
-#> [3,]  0.30914272  0.94984887 -0.03490048  0.03162059
-#> [4,] -0.43554881  0.16399170  0.84469519  0.26437471
+#> [1,]  0.01658196 -0.85400548 -0.14042079 -0.50068122
+#> [2,]  0.14042079 -0.50068122  0.01658196  0.85400548
+#> [3,] -0.29097292  0.08269119 -0.94622503  0.11469580
+#> [4,]  0.94622503  0.11469580 -0.29097292 -0.08269119
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
@@ -95,6 +95,9 @@ about 10x compared to the use of matrix multiplication.
 MIT
 
 ## <span id="links">Useful links</span>
+
+- [fort 0.01 package manual
+  (pdf)](https://tomessilva.github.io/manuals/fort_0.0.1.pdf)
 
 - [Random projection
   (Wikipedia)](https://en.wikipedia.org/wiki/Random_projection)
