@@ -37,6 +37,8 @@
 #' Currently, the available options for the `type` parameter are:
 #'  * `default`: this is the default option, if no `type` is specified; currently, it assumes the `fft2`
 #'    type, but this is subject to change (so avoid this option in non-interactive usage);
+#'  * `fft1`: this type of `fort` transform uses the Fast Fourier Transform as base transform; for more
+#'    technical details, see [FastTransformFFT1].
 #'  * `fft2`: this type of `fort` transform uses the Fast Fourier Transform as base transform; for more
 #'    technical details, see [FastTransformFFT2].
 #'

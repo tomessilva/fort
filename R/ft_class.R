@@ -8,7 +8,7 @@
 #'   [fort()], which correspond to structured linear transforms. Useful objects
 #'   of this class must be also part of a subclass which extends this one with
 #'   a specific implementation of a structured linear transform (e.g.,
-#'   [FastTransformFFT2]).
+#'   [FastTransformFFT1] or [FastTransformFFT2]).
 #'
 #' @details It is generally not recommended that the fields and methods
 #' described here are used directly, unless you have some specific reason
@@ -34,7 +34,9 @@
 #'   or not (default is `TRUE`).
 #' @field logdet List with cached determinants of the forward and inverse
 #'   transforms
-#' @seealso [fort()] and [fort-package]
+#' @seealso
+#'  * [fort()] and [fort-package], for more detailed information
+#'  * [FastTransformFFT1] and [FastTransformFFT2], for specific `FastTransform` subclasses
 #' @export
 FastTransform <- R6::R6Class(
   classname = "FastTransform",
