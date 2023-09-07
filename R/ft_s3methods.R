@@ -12,6 +12,7 @@
 #' @param y A numeric (real) matrix/vector with an appropriate number of rows/elements.
 #'
 #' @return A numeric (real) matrix with the same number of columns as `y`.
+#' @seealso [fort()] to create `FastTransform` objects, and [`%***%`] for \strong{unsafe} evaluation
 #' @export
 #'
 #' @examples
@@ -33,6 +34,7 @@
 #'
 #' @return A vector of length 2 containing the dimensions of the fast transform (i.e., number of rows and
 #'   number of columns, in this order).
+#' @seealso [fort()]
 #' @export
 #'
 #' @examples
@@ -50,6 +52,7 @@ dim.FastTransform <- function(x) {
 #' @param ... Extra parameters (ignored).
 #'
 #' @return A `matrix` object equivalent to x.
+#' @seealso [fort()]
 #' @export
 #'
 #' @examples
@@ -71,6 +74,7 @@ as.matrix.FastTransform <- function(x, ...) {
 #' @param ... Extra parameters (ignored).
 #'
 #' @return The input object (invisibly).
+#' @seealso [fort()]
 #' @export
 #'
 #' @examples
@@ -91,6 +95,7 @@ summary.FastTransform <- function(object, ...) {
 #'
 #' @return For `det`, the determinant of `x`. For `determinant`, the same output format as
 #'   `determinant.matrix()`.
+#' @seealso [fort()]
 #' @export
 #'
 #' @examples
@@ -115,6 +120,7 @@ determinant.FastTransform <- function(x, logarithm = TRUE, ...) {
 #' @param x An object of class `FastTransform`, created using `fort()`.
 #'
 #' @return Either an object of class `FastTransform` (if `x$invertible` is `TRUE`) or a matrix.
+#' @seealso [fort()] and [solve.FastTransform()]
 #' @export
 #'
 #' @examples
@@ -136,6 +142,9 @@ t.FastTransform <- function(x) {
 #' a `FastTransform` object, while `b` can be either a vector or a matrix. If `b` is missing, it returns
 #' a `FastTransform` object corresponding to the inverse (or a generalized inverse) of `a`.
 #'
+#' Note that the inverse transform will only be fast (i.e., avoid matrix multiplication) if
+#' \eqn{dim\_in = dim\_out = blocksize}.
+#'
 #' @param a An object of class `FastTransform`, created using `fort()`.
 #' @param b A numeric vector or matrix (to solve the equation), or nothing (to obtain a generalized
 #'   inverse of `a`).
@@ -143,6 +152,7 @@ t.FastTransform <- function(x) {
 #'
 #' @return Either a matrix (representing `x`), or a `FastTransform` object (representing a generalized
 #'   inverse of `a`; if parameter `b` is missing).
+#' @seealso [fort()]
 #' @export
 #'
 #' @examples
