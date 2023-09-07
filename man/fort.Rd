@@ -69,6 +69,8 @@ Currently, the available options for the \code{type} parameter are:
 \itemize{
 \item \code{default}: this is the default option, if no \code{type} is specified; currently, it assumes the \code{fft2}
 type, but this is subject to change (so avoid this option in non-interactive usage);
+\item \code{fft1}: this type of \code{fort} transform uses the Fast Fourier Transform as base transform; for more
+technical details, see \link{FastTransformFFT1}.
 \item \code{fft2}: this type of \code{fort} transform uses the Fast Fourier Transform as base transform; for more
 technical details, see \link{FastTransformFFT2}.
 }

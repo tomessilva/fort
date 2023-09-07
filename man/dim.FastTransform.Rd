@@ -22,3 +22,6 @@ but much more efficiently.
 dim(fort(3, 17)) # should return c(17,3)
 dim(t(fort(3, 17))) # should return c(3,17)
 }
+\seealso{
+\code{\link[=fort]{fort()}}
+}

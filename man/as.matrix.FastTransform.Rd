@@ -24,3 +24,6 @@ fast_result <- fast_transform \%*\% diag(4)
 slow_result <- slow_transform \%*\% diag(4)
 norm(fast_result - slow_result) # should be small
 }
+\seealso{
+\code{\link[=fort]{fort()}}
+}

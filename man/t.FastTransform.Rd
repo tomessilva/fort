@@ -24,3 +24,6 @@ will be returned, with a warning.
 # the result below should be close to zero
 sum((a \%*\% diag(4) - b \%*\% diag(4))^2)
 }
+\seealso{
+\code{\link[=fort]{fort()}} and \code{\link[=solve.FastTransform]{solve.FastTransform()}}
+}

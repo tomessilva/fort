@@ -23,3 +23,6 @@ Z \%*\% matrix(1:2, 4, 3) # output is a 1024 by 3 matrix
 # the example below works: y is assumed to be a single column vector
 Z \%*\% 1:4 # output is a 1024 by 1 matrix
 }
+\seealso{
+\code{\link[=fort]{fort()}} to create \code{FastTransform} objects, and \code{\link{\%***\%}} for \strong{unsafe} evaluation
+}

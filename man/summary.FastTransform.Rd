@@ -21,3 +21,6 @@ information provided by using \code{print()}.
 \examples{
 summary(fort(3, 17))
 }
+\seealso{
+\code{\link[=fort]{fort()}}
+}

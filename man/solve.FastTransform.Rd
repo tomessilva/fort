@@ -23,9 +23,16 @@ Solves an equation of the form \code{a \%*\% x = b} for \code{x}, where \code{a}
 a \code{FastTransform} object, while \code{b} can be either a vector or a matrix. If \code{b} is missing, it returns
 a \code{FastTransform} object corresponding to the inverse (or a generalized inverse) of \code{a}.
 }
+\details{
+Note that the inverse transform will only be fast (i.e., avoid matrix multiplication) if
+\eqn{dim\_in = dim\_out = blocksize}.
+}
 \examples{
 a <- fort(4)
 inv_a <- solve(a) # inverse of a
 inv_a \%*\% diag(4) # applying the inverse of a
 solve(a, diag(4)) # should give the same output
+}
+\seealso{
+\code{\link[=fort]{fort()}}
 }

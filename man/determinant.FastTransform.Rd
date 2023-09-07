@@ -26,3 +26,6 @@ determinant. If the input transform (\code{x}) is not square, the function will 
 det(fort(16)) # either 1 or -1
 determinant(fort(16))
 }
+\seealso{
+\code{\link[=fort]{fort()}}
+}
