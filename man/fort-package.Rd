@@ -11,6 +11,7 @@ Provides convenient access to fast structured random linear transforms implement
 Useful links:
 \itemize{
   \item \url{https://github.com/tomessilva/fort}
+  \item \url{https://tomessilva.github.io/fort/}
   \item Report bugs at \url{https://github.com/tomessilva/fort/issues}
 }
 

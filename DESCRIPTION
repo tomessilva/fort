@@ -20,7 +20,7 @@ RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Author: Tomé Silva [cre, aut] (<https://orcid.org/0000-0002-9434-8686>)
 Maintainer: Tomé Silva <tome@tomesilva.com>
-URL: https://github.com/tomessilva/fort
+URL: https://github.com/tomessilva/fort, https://tomessilva.github.io/fort/
 BugReports: https://github.com/tomessilva/fort/issues
 Suggests: 
     knitr,
