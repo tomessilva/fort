@@ -59,7 +59,7 @@ FastTransformFFT1 <- R6::R6Class(
       cs1 <- complex(modulus = 1, argument = 2 * pi * runif(nn))
       # the scale of the last one is corrected
       # to ensure norm-preservation when dim_in = dim_out
-      overall_scaling_factor <- 1 / nn
+      overall_scaling_factor <- sqrt(1 / nn)
       cs2 <- complex(
         modulus = 1,
         argument = 2 * pi * runif(nn)
