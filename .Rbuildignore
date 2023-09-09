@@ -7,3 +7,5 @@
 ^pkgdown$
 ^tmp$
 ^\.github$
+^doc$
+^Meta$
