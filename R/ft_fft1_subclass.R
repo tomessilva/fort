@@ -58,8 +58,8 @@ FastTransformFFT1 <- R6::R6Class(
       # generate random unitary isotropic complex numbers
       cs1 <- complex(modulus = 1, argument = 2 * pi * runif(nn))
       # the scale of the last one is corrected
-      # to ensure norm-preservation when dim_in = dim_out
-      overall_scaling_factor <- sqrt(1 / nn)
+      # to ensure norm-preservation
+      overall_scaling_factor <- sqrt(dim_in / (nn * dim_out))
       cs2 <- complex(
         modulus = 1,
         argument = 2 * pi * runif(nn)
