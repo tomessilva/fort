@@ -14,6 +14,110 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+# Introduction to `fort`
+
+The `fort` package is useful when you need to either perform random orthonormal transformations (i.e., random rotation with/without a reflection) or random projections (particularly when it is beneficial that the projections are uncorrelated).
+
+Due to their use of fast structured transforms, these can be much faster than performing the equivalent operations using matrix multiplication. More specifically, `fort` transforms are generally faster when working with spaces of dimensionality 64 or larger.
+
+This vignette exemplifies how to use the `fort` package, in practice.
+
+## Basic usage
+
+To use `fort`, you just need to use the `fort()` function along with the usual matrix operations (e.g., `%*%`, `solve()`):
+
+```{r basics}
 library(fort)
+
+# generate some random data (100 R^64 vectors)
+my_matrix <- matrix(rnorm(100 * 64), nrow = 64)
+
+# get a random orthonormal transformation from R^64 -> R^64
+my_transform <- fort(64)
+
+print(my_transform)
+
+# apply the transform to the matrix
+new_matrix <- my_transform %*% my_matrix
+
+# verify isometry
+# (compare Frobenius norm of matrix before/after transform)
+sqrt(sum(my_matrix^2)) - sqrt(sum(new_matrix^2))
+
+# invert transform
+my_matrix_estimate <- solve(my_transform, new_matrix)
+
+# verify inversion
+# (Frobenius norm of difference should be small)
+sqrt(sum(my_matrix - my_matrix_estimate)^2)
+
+# get the transform in matrix format
+my_transform_matrix <- as.matrix(my_transform)
+
 ```
+
+## `fort` for dimensionality reduction
+
+One practical case in which `fort` can be useful is in data-independent dimensionality reduction methods. In particular, it can be used to implement an (approximately) orthogonal Johnson-Lindenstrauss transform:
+
+```{r dimred}
+library(fort)
+
+# generate high-dimensional sparse vectors
+n_samples <- 100
+dim_input <- 2048
+sparse_data <- matrix(as.numeric(rnorm(n_samples * dim_input) > 0), nrow = dim_input)
+
+# we should be able to reduce the dimensionality of the space while mostly preserving distances
+dim_output <- 128
+sketching_transform <- fort(dim_input,     # input dimensionality
+                            dim_output,    # output dimensionality
+                            type = "fft2", # type of transform to use
+                            seed = 42)     # seed for reproducibility
+
+# reduce dimensionality of original sparse data using our transform
+reduced_data <- sketching_transform %*% sparse_data
+
+# compare dot products in both spaces
+# (the second calculation should be faster)
+system.time(sparse_inner <- t(sparse_data) %*% sparse_data)
+system.time(reduced_inner <- t(reduced_data) %*% reduced_data)
+
+# vectorize dot products
+sparse_inner <- as.numeric(sparse_inner)
+reduced_inner <- as.numeric(reduced_inner)
+
+plot(reduced_inner ~ sparse_inner,
+     xlab = "Dot products in original space",
+     ylab = "Dot products in reduced space")
+abline(0, 1, lty = 2)
+
+# check relative errors
+summary(abs(sparse_inner - reduced_inner)/sparse_inner)
+
+# transpose matrices to comply with dist() convention
+sparse_data <- t(sparse_data)
+reduced_data <- t(reduced_data)
+
+# compare distances in both spaces
+# (the second calculation should be faster)
+system.time(dist_original <- dist(sparse_data))
+system.time(dist_reduced <- dist(reduced_data))
+
+# vectorize distances and remove diagonal
+dist_original_vec <- as.numeric(dist_original)[as.numeric(dist_original) > 0]
+dist_reduced_vec <- as.numeric(dist_reduced)[as.numeric(dist_reduced) > 0]
+
+# check relative errors
+summary(abs(dist_original_vec - dist_reduced_vec)/dist_original_vec)
+
+```
+
+Thus, this example illustrates that `fort` can be used for fast and (approximately) isometric data-independent dimensionality reduction, which can be used to accelerate algorithms that rely on calculating distances or dot products between many high-dimensional vectors, even when typical approaches (e.g., truncated singular value decomposition) may be too expensive.
+
+In this particular example, we see that `fort` can reduce the dimensionality of the input vectors
+by 16 times (which results in a dramatic speed-up when calculating dot products or distances), while roughly preserving the distances between vectors (typical relative embedding errors of about 5%).
+
+## `fort` for kernel approximation
+
+Example to be inserted here.

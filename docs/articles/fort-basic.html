@@ -80,9 +80,150 @@
 
     
     
+<div class="section level2">
+<h2 id="introduction-to-fort">Introduction to <code>fort</code><a class="anchor" aria-label="anchor" href="#introduction-to-fort"></a>
+</h2>
+<p>The <code>fort</code> package is useful when you need to either
+perform random orthonormal transformations (i.e., random rotation
+with/without a reflection) or random projections (particularly when it
+is beneficial that the projections are uncorrelated).</p>
+<p>Due to their use of fast structured transforms, these can be much
+faster than performing the equivalent operations using matrix
+multiplication. More specifically, <code>fort</code> transforms are
+generally faster when working with spaces of dimensionality 64 or
+larger.</p>
+<p>This vignette exemplifies how to use the <code>fort</code> package,
+in practice.</p>
+<div class="section level3">
+<h3 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h3>
+<p>To use <code>fort</code>, you just need to use the
+<code><a href="../reference/fort.html">fort()</a></code> function along with the usual matrix operations
+(e.g., <code>%*%</code>, <code><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve()</a></code>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tomessilva/fort" class="external-link">fort</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tomessilva/fort" class="external-link">fort</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># generate some random data (100 R^64 vectors)</span></span>
+<span><span class="va">my_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="fl">64</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">64</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get a random orthonormal transformation from R^64 -&gt; R^64</span></span>
+<span><span class="va">my_transform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fort.html">fort</a></span><span class="op">(</span><span class="fl">64</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_transform</span><span class="op">)</span></span>
+<span><span class="co">#&gt; fort linear operation: R^64 -&gt; [fft2] -&gt; R^64</span></span>
+<span></span>
+<span><span class="co"># apply the transform to the matrix</span></span>
+<span><span class="va">new_matrix</span> <span class="op">&lt;-</span> <span class="va">my_transform</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">my_matrix</span></span>
+<span></span>
+<span><span class="co"># verify isometry</span></span>
+<span><span class="co"># (compare Frobenius norm of matrix before/after transform)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">my_matrix</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">new_matrix</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span></span>
+<span><span class="co"># invert transform</span></span>
+<span><span class="va">my_matrix_estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">my_transform</span>, <span class="va">new_matrix</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># verify inversion</span></span>
+<span><span class="co"># (Frobenius norm of difference should be small)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">my_matrix</span> <span class="op">-</span> <span class="va">my_matrix_estimate</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 3.926953e-15</span></span>
+<span></span>
+<span><span class="co"># get the transform in matrix format</span></span>
+<span><span class="va">my_transform_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">my_transform</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="fort-for-dimensionality-reduction">
+<code>fort</code> for dimensionality reduction<a class="anchor" aria-label="anchor" href="#fort-for-dimensionality-reduction"></a>
+</h3>
+<p>One practical case in which <code>fort</code> can be useful is in
+data-independent dimensionality reduction methods. In particular, it can
+be used to implement an (approximately) orthogonal Johnson-Lindenstrauss
+transform:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tomessilva/fort" class="external-link">fort</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># generate high-dimensional sparse vectors</span></span>
+<span><span class="va">n_samples</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">dim_input</span> <span class="op">&lt;-</span> <span class="fl">2048</span></span>
+<span><span class="va">sparse_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n_samples</span> <span class="op">*</span> <span class="va">dim_input</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">dim_input</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># we should be able to reduce the dimensionality of the space while mostly preserving distances</span></span>
+<span><span class="va">dim_output</span> <span class="op">&lt;-</span> <span class="fl">128</span></span>
+<span><span class="va">sketching_transform</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fort.html">fort</a></span><span class="op">(</span><span class="va">dim_input</span>,     <span class="co"># input dimensionality</span></span>
+<span>                            <span class="va">dim_output</span>,    <span class="co"># output dimensionality</span></span>
+<span>                            type <span class="op">=</span> <span class="st">"fft2"</span>, <span class="co"># type of transform to use</span></span>
+<span>                            seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span>     <span class="co"># seed for reproducibility</span></span>
+<span></span>
+<span><span class="co"># reduce dimensionality of original sparse data using our transform</span></span>
+<span><span class="va">reduced_data</span> <span class="op">&lt;-</span> <span class="va">sketching_transform</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">sparse_data</span></span>
+<span></span>
+<span><span class="co"># compare dot products in both spaces</span></span>
+<span><span class="co"># (the second calculation should be faster)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">sparse_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">sparse_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;    0.01    0.00    0.02</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">reduced_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">reduced_data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">reduced_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;       0       0       0</span></span>
+<span></span>
+<span><span class="co"># vectorize dot products</span></span>
+<span><span class="va">sparse_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">sparse_inner</span><span class="op">)</span></span>
+<span><span class="va">reduced_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">reduced_inner</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">reduced_inner</span> <span class="op">~</span> <span class="va">sparse_inner</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"Dot products in original space"</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">"Dot products in reduced space"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="fort-basic_files/figure-html/dimred-1.png" width="700"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># check relative errors</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">sparse_inner</span> <span class="op">-</span> <span class="va">reduced_inner</span><span class="op">)</span><span class="op">/</span><span class="va">sparse_inner</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">#&gt; 0.00017 0.04315 0.08801 0.10374 0.14963 0.44630</span></span>
+<span></span>
+<span><span class="co"># transpose matrices to comply with dist() convention</span></span>
+<span><span class="va">sparse_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span></span>
+<span><span class="va">reduced_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">reduced_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># compare distances in both spaces</span></span>
+<span><span class="co"># (the second calculation should be faster)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">dist_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;    0.07    0.00    0.10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">dist_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">reduced_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;       0       0       0</span></span>
+<span></span>
+<span><span class="co"># vectorize distances and remove diagonal</span></span>
+<span><span class="va">dist_original_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_original</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_original</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span></span>
+<span><span class="va">dist_reduced_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_reduced</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_reduced</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># check relative errors</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">dist_original_vec</span> <span class="op">-</span> <span class="va">dist_reduced_vec</span><span class="op">)</span><span class="op">/</span><span class="va">dist_original_vec</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></span>
+<span><span class="co">#&gt; 1.139e-05 1.842e-02 3.946e-02 4.661e-02 6.619e-02 2.034e-01</span></span></code></pre></div>
+<p>Thus, this example illustrates that <code>fort</code> can be used for
+fast and (approximately) isometric data-independent dimensionality
+reduction, which can be used to accelerate algorithms that rely on
+calculating distances or dot products between many high-dimensional
+vectors, even when typical approaches (e.g., truncated singular value
+decomposition) may be too expensive.</p>
+<p>In this particular example, we see that <code>fort</code> can reduce
+the dimensionality of the input vectors by 16 times (which results in a
+dramatic speed-up when calculating dot products or distances), while
+roughly preserving the distances between vectors (typical relative
+embedding errors of about 5%).</p>
+</div>
+<div class="section level3">
+<h3 id="fort-for-kernel-approximation">
+<code>fort</code> for kernel approximation<a class="anchor" aria-label="anchor" href="#fort-for-kernel-approximation"></a>
+</h3>
+<p>Example to be inserted here.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

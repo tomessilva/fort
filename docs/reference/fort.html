@@ -177,18 +177,18 @@ be easily converted to matrices (using <code><a href="https://rdrr.io/r/base/mat
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fort</span><span class="op">(</span><span class="fl">16</span><span class="op">)</span> <span class="co"># a random orthogonal transform from R^16 to R^16</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^16 &lt;U+2192&gt; [fft2] &lt;U+2192&gt; R^16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^16 -&gt; [fft2] -&gt; R^16</span>
 <span class="r-in"><span><span class="fu">fort</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">33</span><span class="op">)</span> <span class="co"># a random transform from R^5 to R^33</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^5 &lt;U+2192&gt; [R^64 &lt;U+2192&gt; fft2 &lt;U+2192&gt; R^64] &lt;U+2192&gt; R^33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^5 -&gt; [R^64 -&gt; fft2 -&gt; R^64] -&gt; R^33</span>
 <span class="r-in"><span><span class="fu">fort</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">33</span><span class="op">)</span><span class="op">)</span> <span class="co"># same as previous line</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^5 &lt;U+2192&gt; [R^64 &lt;U+2192&gt; fft2 &lt;U+2192&gt; R^64] &lt;U+2192&gt; R^33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fort linear operation: R^5 -&gt; [R^64 -&gt; fft2 -&gt; R^64] -&gt; R^33</span>
 <span class="r-in"><span><span class="co"># apply a random orthogonal transformation to the canonical R^4 basis</span></span></span>
 <span class="r-in"><span><span class="fu">fort</span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]        [,2]       [,3]        [,4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.1258118  0.68053365  0.5000813 -0.52054210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  0.5000813 -0.52054210 -0.1258118 -0.68053365</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.8103591  0.03903958  0.2782233  0.51418458</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.2782233 -0.51418458  0.8103591  0.03903958</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]       [,2]       [,3]       [,4]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.1512613 -0.7326689  0.2213634 -0.6255514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.6334659  0.1173142 -0.7258369 -0.2410791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.2213634  0.6255514  0.1512613 -0.7326689</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.7258369 -0.2410791 -0.6334659 -0.1173142</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
