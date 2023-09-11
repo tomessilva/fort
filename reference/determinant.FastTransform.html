@@ -28,7 +28,7 @@ determinant. If the input transform (x) is not square, the function will fail wi
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/fort-basic.html">fort-basic</a>
+    <a class="dropdown-item" href="../articles/fort-basic.html">Using the fort package</a>
   </div>
 </li>
 <li class="nav-item">
@@ -96,15 +96,15 @@ determinant. If the input transform (<code>x</code>) is not square, the function
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/det.html" class="external-link">det</a></span><span class="op">(</span><span class="fu"><a href="fort.html">fort</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="co"># either 1 or -1</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/det.html" class="external-link">determinant</a></span><span class="op">(</span><span class="fu"><a href="fort.html">fort</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $modulus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -5.551115e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8.881784e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"logarithm")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sign</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "det"</span>
