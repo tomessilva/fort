@@ -8,7 +8,8 @@
 #' \eqn{\mathbb{R}^{dim\_in} \to \mathbb{R}^{dim\_out}} linear transform. This transform will be
 #' orthonormal when \eqn{dim\_in = dim\_out} \emph{and} they are a power of 2, and approximately
 #' orthogonal or semi-orthogonal (in the sense that either \eqn{W^T W \approx I_{dim\_in}} or
-#' \eqn{W W^T \approx I_{dim\_out}}, if \eqn{W} represents the transform) otherwise.
+#' \eqn{W W^T \approx I_{dim\_out}}, if \eqn{W} represents the transform and \eqn{I_n} represents an
+#' N-dimensional identity matrix) otherwise.
 #'
 #' The goal of `fort()` is to provide an easy and efficient way of calculating fast orthogonal random
 #' transforms (when `dim_in` is the same as `dim_out`) or semi-orthogonal transforms (when `dim_in` is
@@ -20,7 +21,7 @@
 #' Internally, all `fort` transforms assume a blocksize which \emph{must} be a power of 2 and no smaller
 #' than `max(dim_in, dim_out)`. The resulting transform will be practically orthonormal when
 #' \eqn{dim\_in = dim\_out} and they match the blocksize of the transform, and practically semi-orthogonal
-#' when \eqn{dim\_in != dim\_out} and `max(dim_in, dim_out)` matches the blocksize. Otherwise, these
+#' when \eqn{dim\_in \neq dim\_out} and `max(dim_in, dim_out)` matches the blocksize. Otherwise, these
 #' properties will \emph{only approximately} hold, since the output will result from a decimated
 #' transform (i.e., the rows and columns of the transform should be decorrelated, but not necessarily
 #' orthogonal).
@@ -37,10 +38,10 @@
 #' Currently, the available options for the `type` parameter are:
 #'  * `default`: this is the default option, if no `type` is specified; currently, it assumes the `fft2`
 #'    type, but this is subject to change (so avoid this option in non-interactive usage);
-#'  * `fft1`: this type of `fort` transform uses the Fast Fourier Transform as base transform; for more
-#'    technical details, see [FastTransformFFT1].
-#'  * `fft2`: this type of `fort` transform uses the Fast Fourier Transform as base transform; for more
-#'    technical details, see [FastTransformFFT2].
+#'  * `fft1`: this type of `fort` transform uses the Fast Fourier Transform as base transform (which is
+#'    used once); for more technical details, see [FastTransformFFT1].
+#'  * `fft2`: this type of `fort` transform uses the Fast Fourier Transform as base transform (which is
+#'     used twice); for more technical details, see [FastTransformFFT2].
 #'
 #' @section Using `fort` transforms:
 #' In practice, to apply the fast transform to the columns of a matrix, you should use the `%*%` operator

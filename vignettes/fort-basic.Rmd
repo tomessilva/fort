@@ -1,8 +1,8 @@
 ---
-title: "fort-basic"
+title: "Using the fort package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{fort-basic}
+  %\VignetteIndexEntry{Using the fort package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-# Introduction to `fort`
 
 The `fort` package is useful when you need to either perform random orthonormal transformations (i.e., random rotation with/without a reflection) or random projections (particularly when it is beneficial that the projections are uncorrelated).
 
@@ -58,17 +56,18 @@ my_transform_matrix <- as.matrix(my_transform)
 
 ## `fort` for dimensionality reduction
 
-One practical case in which `fort` can be useful is in data-independent dimensionality reduction methods. In particular, it can be used to implement an (approximately) orthogonal Johnson-Lindenstrauss transform:
+One practical case in which `fort` can be useful is in data-independent dimensionality reduction methods. In particular, it can be used to implement an (approximately) orthogonal [Johnson-Lindenstrauss transform](https://arxiv.org/abs/2103.00564):
 
 ```{r dimred}
 library(fort)
 
 # generate high-dimensional sparse vectors
-n_samples <- 100
+n_samples <- 1000
 dim_input <- 2048
 sparse_data <- matrix(as.numeric(rnorm(n_samples * dim_input) > 0), nrow = dim_input)
 
-# we should be able to reduce the dimensionality of the space while mostly preserving distances
+# we should be able to reduce the dimensionality of the space while mostly
+# preserving distances
 dim_output <- 128
 sketching_transform <- fort(dim_input,     # input dimensionality
                             dim_output,    # output dimensionality

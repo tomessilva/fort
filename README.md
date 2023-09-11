@@ -9,17 +9,20 @@
 
 <!-- badges: end -->
 
-The `fort` package provides convenient access to fast structured random
-linear transforms implemented in C++ (via ‘Rcpp’) that are (at least
-approximately) orthogonal or semi-orthogonal, and often much faster than
-matrix multiplication, in the same spirit as the [Fastfood](#ref4),
-[ACDC](#ref3), [HD](#ref2) and [SD](#ref1) families of random structured
-transforms.
+The `fort` package provides convenient access to fast, structured,
+random linear transforms implemented in C++ (via ‘Rcpp’) that are (at
+least approximately) orthogonal or semi-orthogonal, and are often much
+faster than matrix multiplication, in the same spirit as the
+[Fastfood](#ref4), [ACDC](#ref3), [HD](#ref2) and [SD](#ref1) families
+of random structured transforms.
 
 Useful for algorithms that require or benefit from uncorrelated random
 projections, such as fast dimensionality reduction (e.g.,
 [Johnson-Lindenstrauss transform](#links)) or kernel approximation
 (e.g., [random kitchen sinks](#ref5)) methods.
+
+For more technical details, see the reference page for
+[`fort()`](https://tomessilva.github.io/fort/reference/fort.html).
 
 ## Installation
 
@@ -48,11 +51,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>             [,1]        [,2]        [,3]        [,4]
-#> [1,]  0.01658196 -0.85400548 -0.14042079 -0.50068122
-#> [2,]  0.14042079 -0.50068122  0.01658196  0.85400548
-#> [3,] -0.29097292  0.08269119 -0.94622503  0.11469580
-#> [4,]  0.94622503  0.11469580 -0.29097292 -0.08269119
+#>             [,1]        [,2]        [,3]       [,4]
+#> [1,] -0.08507199  0.04448012  0.19822740 0.97544358
+#> [2,]  0.95848508 -0.26849697  0.03818877 0.08807578
+#> [3,] -0.26849697 -0.95848508 -0.08807578 0.03818877
+#> [4,]  0.04448012  0.08507199 -0.97544358 0.19822740
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4
@@ -89,6 +92,10 @@ system.time(for (i in 1:100) test <- slow_transform %*% matrix_to_transform, gcF
 
 Note: in this case, using a `fort` fast transform leads to a speed-up of
 about 10x compared to the use of matrix multiplication.
+
+For more information on how to use `fort` in practice, check out the
+[package’s
+vignette](https://tomessilva.github.io/fort/articles/fort-basic.html).
 
 ## License
 

@@ -1,13 +1,13 @@
 Package: fort
 Type: Package
-Title: Fast Orthogonal Random Transforms in R
+Title: Fast Orthogonal Random Transforms
 Version: 0.0.1
 Authors@R: 
     person("Tom\u00e9", "Silva", email = "tome@tomesilva.com",
            role = c("cre", "aut"), comment = c(ORCID = "0000-0002-9434-8686"))
-Description: Provides convenient access to fast structured random linear
+Description: Provides convenient access to fast, structured, random linear
     transforms implemented in C++ (via 'Rcpp') that are (at least
-    approximately) orthogonal or semi-orthogonal, and often much faster
+    approximately) orthogonal or semi-orthogonal, and are often much faster
     than matrix multiplication. Useful for algorithms that require or
     benefit from uncorrelated random projections, such as fast dimensionality
     reduction (e.g., Johnson-Lindenstrauss transform) or kernel approximation
