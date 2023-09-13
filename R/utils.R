@@ -26,17 +26,29 @@
     # add extra fort types to base list
     # overwriting existing ones, if needed
     new_types <- getOption("fort.type_list")
-    if (!is.list(new_types)) stop("malformed .Options$fort.type_list",
-                                  " (needs to be a list)")
+    if (!is.list(new_types)) {
+      stop(
+        "malformed .Options$fort.type_list",
+        " (needs to be a list)"
+      )
+    }
     for (i in 1:length(new_types)) {
       cur_type <- names(new_types)[i]
       cur_value <- new_types[[i]]
-      if (!is.character(cur_value)) stop("malformed field '", cur_type,
-                                         "' in .Options$fort.type_list",
-                                         " (needs to be of character type)")
-      if (cur_value == "FastTransform") stop("the general `FastTransform`",
-                                             " class cannot be used in",
-                                             " .Options$fort.type_list")
+      if (!is.character(cur_value)) {
+        stop(
+          "malformed field '", cur_type,
+          "' in .Options$fort.type_list",
+          " (needs to be of character type)"
+        )
+      }
+      if (cur_value == "FastTransform") {
+        stop(
+          "the general `FastTransform`",
+          " class cannot be used in",
+          " .Options$fort.type_list"
+        )
+      }
       base_types[[cur_type]] <- cur_value
     }
   }
@@ -58,13 +70,17 @@
   out_val <- FALSE
   attr(out_val, "reason") <- "critical error"
   # only the most important fields are compared, to save time
-  fields_to_compare <- c("dim_in", "dim_out", "blocksize", "cache_matrix",
-                         "fort_type", "inverse", "invertible", "fwd_par")
+  fields_to_compare <- c(
+    "dim_in", "dim_out", "blocksize", "cache_matrix",
+    "fort_type", "inverse", "invertible", "fwd_par"
+  )
   for (i in 1:length(fields_to_compare)) {
     cur_field <- fields_to_compare[i]
     if (!isTRUE(all.equal(x[[cur_field]], y[[cur_field]], tolerance = tolerance))) {
-      attr(out_val, "reason") <- paste0("discrepancy in field '",
-                                        cur_field, "'")
+      attr(out_val, "reason") <- paste0(
+        "discrepancy in field '",
+        cur_field, "'"
+      )
       return(out_val)
     }
   }
@@ -163,17 +179,21 @@
         return(out_subclass$new)
       } else {
         # object is NOT a class constructor
-        error_message <- paste0("invalid `type` when calling fort(), since '",
-                                fort_type, "' is not a valid 'FastTransform'",
-                                " subclass; please choose one of: ",
-                                paste0(available_methods, collapse = ", "))
+        error_message <- paste0(
+          "invalid `type` when calling fort(), since '",
+          fort_type, "' is not a valid 'FastTransform'",
+          " subclass; please choose one of: ",
+          paste0(available_methods, collapse = ", ")
+        )
       }
     } else {
       # object does not even exist
-      error_message <- paste0("invalid `type` when calling fort(), since '",
-                              fort_type, "' does not exist; please ",
-                              "choose one of: ",
-                              paste0(available_methods, collapse = ", "))
+      error_message <- paste0(
+        "invalid `type` when calling fort(), since '",
+        fort_type, "' does not exist; please ",
+        "choose one of: ",
+        paste0(available_methods, collapse = ", ")
+      )
     }
     stop(error_message)
   } else if (inherits(fort_type, "R6ClassGenerator")) {
@@ -186,9 +206,11 @@
     # passed directly, so just return it
     return(fort_type)
   }
-  error_message <- paste0("invalid `type` when calling fort(); please ",
-                          "choose one of: ",
-                          paste0(available_methods, collapse = ", "))
+  error_message <- paste0(
+    "invalid `type` when calling fort(); please ",
+    "choose one of: ",
+    paste0(available_methods, collapse = ", ")
+  )
   stop(error_message)
 }
 

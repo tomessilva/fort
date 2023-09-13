@@ -2,7 +2,7 @@
 # test - fort() helper function
 #
 
-test_that("first two arguments handled correctly (dim_in == dim_out)",{
+test_that("first two arguments handled correctly (dim_in == dim_out)", {
   test_seed <- 1 * pi
   n_tests <- 2
   fort_types <- names(.get_available_fort_types())
@@ -19,29 +19,41 @@ test_that("first two arguments handled correctly (dim_in == dim_out)",{
       a3 <- fort(c(j, j), type = cur_type, seed = cur_seed)
       # check validity of objects
       cond <- .is_valid_ft(a1)
-      expect_true(cond, paste0("a1 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .is_valid_ft(a2)
-      expect_true(cond, paste0("a2 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a2 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .is_valid_ft(a3)
-      expect_true(cond, paste0("a3 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a3 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       # ensure objects are similar
       cond <- .are_similar_ft(a1, a2)
-      expect_true(cond, paste0("a1 and a2 are not similar (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 and a2 are not similar (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .are_similar_ft(a1, a3)
-      expect_true(cond, paste0("a1 and a3 are not similar (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 and a3 are not similar (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .are_similar_ft(a2, a3)
-      expect_true(cond, paste0("a2 and a3 are not similar (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a2 and a3 are not similar (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
     }
   }
 })
 
-test_that("first two arguments handled correctly (dim_in < dim_out)",{
+test_that("first two arguments handled correctly (dim_in < dim_out)", {
   test_seed <- 2 * pi
   n_tests <- 2
   fort_types <- names(.get_available_fort_types())
@@ -57,20 +69,26 @@ test_that("first two arguments handled correctly (dim_in < dim_out)",{
       a2 <- fort(c(1, j + 1), type = cur_type, seed = cur_seed)
       # check validity of objects
       cond <- .is_valid_ft(a1)
-      expect_true(cond, paste0("a1 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .is_valid_ft(a2)
-      expect_true(cond, paste0("a2 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a2 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       # ensure objects are similar
       cond <- .are_similar_ft(a1, a2)
-      expect_true(cond, paste0("a1 and a2 are not similar (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 and a2 are not similar (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
     }
   }
 })
 
-test_that("first two arguments handled correctly (dim_in > dim_out)",{
+test_that("first two arguments handled correctly (dim_in > dim_out)", {
   test_seed <- 3 * pi
   n_tests <- 2
   fort_types <- names(.get_available_fort_types())
@@ -82,24 +100,30 @@ test_that("first two arguments handled correctly (dim_in > dim_out)",{
       # register current testing state
       cur_state <- paste0("/type:", cur_type, "/size:", j, "/seed:", cur_seed)
       # create two equivalent objects with current seed
-      a1 <- fort(1, j + 1,  type = cur_type, seed = cur_seed)
+      a1 <- fort(1, j + 1, type = cur_type, seed = cur_seed)
       a2 <- fort(c(1, j + 1), type = cur_type, seed = cur_seed)
       # check validity of objects
       cond <- .is_valid_ft(a1)
-      expect_true(cond, paste0("a1 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .is_valid_ft(a2)
-      expect_true(cond, paste0("a2 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a2 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       # ensure objects are similar
       cond <- .are_similar_ft(a1, a2)
-      expect_true(cond, paste0("a1 and a2 are not similar (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 and a2 are not similar (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
     }
   }
 })
 
-test_that("'cache_matrix' argument is being respected",{
+test_that("'cache_matrix' argument is being respected", {
   cur_seed <- 4 * pi
 
   # test cache_matrix = FALSE
@@ -125,7 +149,7 @@ test_that("'cache_matrix' argument is being respected",{
   expect_true(is.matrix(a2$fwd_mtrx), "a2_inv is NOT storing rev_mtrx (when it should)")
 })
 
-test_that("different seeds result in different transforms",{
+test_that("different seeds result in different transforms", {
   test_seed <- 5 * pi
   n_tests <- 2
   fort_types <- names(.get_available_fort_types())
@@ -141,30 +165,38 @@ test_that("different seeds result in different transforms",{
       a2 <- fort(17, 5 + j, type = cur_type, seed = cur_seed + sqrt(2))
       # check validity of objects
       cond <- .is_valid_ft(a1)
-      expect_true(cond, paste0("a1 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a1 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       cond <- .is_valid_ft(a2)
-      expect_true(cond, paste0("a2 is not valid (reason:",
-                               attr(cond, "reason"),cur_state,")"))
+      expect_true(cond, paste0(
+        "a2 is not valid (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
       # ensure objects are NOT similar
       cond <- .are_similar_ft(a1, a2)
-      expect_false(cond, paste0("a1 and a2 are similar, even though they were",
-                                "generated with different seeds (reason:",
-                                attr(cond, "reason"),cur_state,")"))
+      expect_false(cond, paste0(
+        "a1 and a2 are similar, even though they were",
+        "generated with different seeds (reason:",
+        attr(cond, "reason"), cur_state, ")"
+      ))
     }
   }
 })
 
-test_that("error handling is working correctly",{
+test_that("error handling is working correctly", {
   cur_seed <- 6 * pi
   # invalid dimensions
-  expect_error(fort(0, seed = cur_seed),
-               "dim_in and dim_out must be positive when calling fort()")
+  expect_error(
+    fort(0, seed = cur_seed),
+    "dim_in and dim_out must be positive when calling fort()"
+  )
   # invalid type of input for first argument
   cur_seed <- cur_seed + 1
   expect_error(fort(fort(1, seed = cur_seed), seed = cur_seed))
   cur_seed <- cur_seed + 1
-  expect_error(fort(list(a=1), seed = cur_seed))
+  expect_error(fort(list(a = 1), seed = cur_seed))
   # invalid type of input for second argument
 
   # invalid value for 'type' field

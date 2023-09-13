@@ -102,12 +102,20 @@ FastTransform <- R6::R6Class(
     evaluate = function(x) {
       # validate self (quick validation)
       is_valid_ft <- .is_valid_ft(self, quick = TRUE)
-      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
-                                    attr(is_valid_ft, "reason"), ")"))
+      if (!is_valid_ft) {
+        stop(paste0(
+          "invalid 'FastTransform' object (",
+          attr(is_valid_ft, "reason"), ")"
+        ))
+      }
       # validate input
-      if (!(is.numeric(x) || is.matrix(x))) stop("you can only apply a ",
-                                                 "'FastTransform' to a ",
-                                                 "numerical object")
+      if (!(is.numeric(x) || is.matrix(x))) {
+        stop(
+          "you can only apply a ",
+          "'FastTransform' to a ",
+          "numerical object"
+        )
+      }
       # check conformity of input
       x_dim_in <- self$get_ncol()
       if (!is.matrix(x)) {
@@ -121,8 +129,10 @@ FastTransform <- R6::R6Class(
             x <- matrix(x, nrow = 1)
           } else {
             # non-conformable
-            stop(paste0("the input to the transform must have ", x_dim_in,
-                        " rows (and not 1 or ", length(x), ")"))
+            stop(paste0(
+              "the input to the transform must have ", x_dim_in,
+              " rows (and not 1 or ", length(x), ")"
+            ))
           }
         }
       }
@@ -201,8 +211,12 @@ FastTransform <- R6::R6Class(
     get_inverse = function() {
       # validate self (quick validation)
       is_valid_ft <- .is_valid_ft(self, quick = TRUE)
-      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
-                                    attr(is_valid_ft, "reason"), ")"))
+      if (!is_valid_ft) {
+        stop(paste0(
+          "invalid 'FastTransform' object (",
+          attr(is_valid_ft, "reason"), ")"
+        ))
+      }
       # get inverse transform
       if (self$inverse) {
         # if already in inverse form...
@@ -268,8 +282,12 @@ FastTransform <- R6::R6Class(
       }
       # check if square transform
       is_square <- (self$dim_in == self$dim_out)
-      if (!is_square) stop("you can only calculate the determinant of a ",
-                           "square matrix")
+      if (!is_square) {
+        stop(
+          "you can only calculate the determinant of a ",
+          "square matrix"
+        )
+      }
       # calculate
       mtrx <- self$as_matrix()
       calculated_logdet <- determinant.matrix(mtrx, logarithm = TRUE)
@@ -338,8 +356,12 @@ FastTransform <- R6::R6Class(
     as_matrix = function() {
       # validate self (quick validation)
       is_valid_ft <- .is_valid_ft(self, quick = TRUE)
-      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
-                                    attr(is_valid_ft, "reason"), ")"))
+      if (!is_valid_ft) {
+        stop(paste0(
+          "invalid 'FastTransform' object (",
+          attr(is_valid_ft, "reason"), ")"
+        ))
+      }
 
       # calculate matrix form of transform
 
@@ -392,8 +414,12 @@ FastTransform <- R6::R6Class(
     print = function() {
       # validate self (quick validation)
       is_valid_ft <- .is_valid_ft(self, quick = TRUE)
-      if (!is_valid_ft) stop(paste0("invalid 'FastTransform' object (",
-                                    attr(is_valid_ft, "reason"), ")"))
+      if (!is_valid_ft) {
+        stop(paste0(
+          "invalid 'FastTransform' object (",
+          attr(is_valid_ft, "reason"), ")"
+        ))
+      }
       # print object information
       is_inverse <- self$inverse
       s_ <- .get_printing_symbols()
@@ -417,13 +443,17 @@ FastTransform <- R6::R6Class(
         buffer_ <- paste0(buffer_, "slow linear transform")
       } else {
         if (cur_dim_in != cur_blocksize) {
-          buffer_ <- paste0(buffer_, s_real, "^", cur_blocksize, " ",
-                            s_arrow, " ")
+          buffer_ <- paste0(
+            buffer_, s_real, "^", cur_blocksize, " ",
+            s_arrow, " "
+          )
         }
         buffer_ <- paste0(buffer_, cur_type)
         if (cur_dim_out != cur_blocksize) {
-          buffer_ <- paste0(buffer_, " ", s_arrow, " ", s_real, "^",
-                            cur_blocksize)
+          buffer_ <- paste0(
+            buffer_, " ", s_arrow, " ", s_real, "^",
+            cur_blocksize
+          )
         }
       }
 
@@ -449,19 +479,29 @@ FastTransform <- R6::R6Class(
         cur_type <- self$fort_type
         if (is_inverse) cur_type <- paste0("inverted ", cur_type)
         cur_type <- paste0(cur_type, "/", class(self)[1])
-        cur_type_line <- paste0(cur_type, " (with an internal blocksize of ",
-                                self$blocksize, ")")
+        cur_type_line <- paste0(
+          cur_type, " (with an internal blocksize of ",
+          self$blocksize, ")"
+        )
       }
 
-      cat(paste0("\n ~ input: ", cur_dim_in, "-dimensional column vector(s) (",
-                 cur_dim_in, " ", s_times, " N matrix)\n"))
-      cat(paste0(" ~ output: ", cur_dim_out, "-dimensional column vector(s) (",
-                 cur_dim_out, " ", s_times, " N matrix)\n"))
+      cat(paste0(
+        "\n ~ input: ", cur_dim_in, "-dimensional column vector(s) (",
+        cur_dim_in, " ", s_times, " N matrix)\n"
+      ))
+      cat(paste0(
+        " ~ output: ", cur_dim_out, "-dimensional column vector(s) (",
+        cur_dim_out, " ", s_times, " N matrix)\n"
+      ))
       cat(paste0(" ~ type: ", cur_type_line, "\n"))
-      cat(paste0(" ~ number of parameters: ", self$get_n_par(),
-                 " (instead of ", cur_dim_in * cur_dim_out, ")\n"))
-      cat(paste0(" ~ apply transform to X via: W %*% X, if W is this ",
-                 "object and X is a ", cur_dim_in, " ", s_times, " N matrix"))
+      cat(paste0(
+        " ~ number of parameters: ", self$get_n_par(),
+        " (instead of ", cur_dim_in * cur_dim_out, ")\n"
+      ))
+      cat(paste0(
+        " ~ apply transform to X via: W %*% X, if W is this ",
+        "object and X is a ", cur_dim_in, " ", s_times, " N matrix"
+      ))
       # return self
       invisible(self)
     }
@@ -488,8 +528,10 @@ FastTransform <- R6::R6Class(
   }
   # verify that the object has NOT been created via FastTransform$new()
   if (is.null(object$blocksize)) {
-    attr(out_val, "reason") <- paste0("object has been created by call",
-                                      " to 'FastTransform$new()'")
+    attr(out_val, "reason") <- paste0(
+      "object has been created by call",
+      " to 'FastTransform$new()'"
+    )
     return(out_val)
   }
   # if 'quick = TRUE', do not perform further testing
@@ -500,13 +542,15 @@ FastTransform <- R6::R6Class(
   }
   # verify existence of important fields
   field_names <- names(object)
-  important_fields <- c("dim_in", "dim_out", "blocksize", "cache_matrix",
-                        "fort_type", "inverse", "invertible", "initialize",
-                        "evaluate", "fwd_eval", "fwd_par", "fwd_mtrx",
-                        "rev_eval", "rev_par", "rev_mtrx", "as_matrix")
+  important_fields <- c(
+    "dim_in", "dim_out", "blocksize", "cache_matrix",
+    "fort_type", "inverse", "invertible", "initialize",
+    "evaluate", "fwd_eval", "fwd_par", "fwd_mtrx",
+    "rev_eval", "rev_par", "rev_mtrx", "as_matrix"
+  )
   if (!all(important_fields %in% field_names)) {
     lacking_fields <- important_fields[!(important_fields %in% field_names)]
-    req_fields <- paste(lacking_fields, collapse=", ")
+    req_fields <- paste(lacking_fields, collapse = ", ")
     attr(out_val, "reason") <- paste0("object lacks essential fields: ", req_fields)
     return(out_val)
   }

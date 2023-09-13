@@ -98,12 +98,12 @@ FastTransformFFT1 <- R6::R6Class(
       # apply transform (call external C++ function)
 
       Xout <- .Call(`_fort_FORT_CPP_FFT1_fwd`,
-                    # X_Re, X_Im
-                    X1, X2,
-                    # s1, s2, s3, s4
-                    p_[["cs1_re"]], p_[["cs1_im"]],
-                    p_[["cs2_re"]], p_[["cs2_im"]],
-                    PACKAGE = "fort"
+        # X_Re, X_Im
+        X1, X2,
+        # s1, s2, s3, s4
+        p_[["cs1_re"]], p_[["cs1_im"]],
+        p_[["cs2_re"]], p_[["cs2_im"]],
+        PACKAGE = "fort"
       )
 
       # final permutation/contraction
@@ -133,12 +133,12 @@ FastTransformFFT1 <- R6::R6Class(
       }
       # apply transform (call external C++ function)
       Xout <- .Call(`_fort_FORT_CPP_FFT1_rev`,
-                    # X_Re, X_Im
-                    X1, X2,
-                    # s1, s2, s3, s4
-                    p_[["cs2i_re"]], p_[["cs2i_im"]],
-                    p_[["cs1i_re"]], p_[["cs1i_im"]],
-                    PACKAGE = "fort"
+        # X_Re, X_Im
+        X1, X2,
+        # s1, s2, s3, s4
+        p_[["cs2i_re"]], p_[["cs2i_im"]],
+        p_[["cs1i_re"]], p_[["cs1i_im"]],
+        PACKAGE = "fort"
       )
 
       # final permutation/contraction
