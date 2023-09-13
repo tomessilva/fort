@@ -51,14 +51,13 @@ sqrt(sum(my_matrix - my_matrix_estimate)^2)
 
 # get the transform in matrix format
 my_transform_matrix <- as.matrix(my_transform)
-
 ```
 
 ## `fort` for dimensionality reduction
 
 One practical case in which `fort` can be useful is in data-independent dimensionality reduction methods. In particular, it can be used to implement an (approximately) orthogonal [Johnson-Lindenstrauss transform](https://arxiv.org/abs/2103.00564):
 
-```{r dimred}
+```{r dimensionality_reduction}
 library(fort)
 
 # generate high-dimensional sparse vectors
@@ -69,10 +68,11 @@ sparse_data <- matrix(as.numeric(rnorm(n_samples * dim_input) > 0), nrow = dim_i
 # we should be able to reduce the dimensionality of the space while mostly
 # preserving distances
 dim_output <- 128
-sketching_transform <- fort(dim_input,     # input dimensionality
-                            dim_output,    # output dimensionality
-                            type = "fft2", # type of transform to use
-                            seed = 42)     # seed for reproducibility
+sketching_transform <- fort(dim_input, # input dimensionality
+  dim_output, # output dimensionality
+  type = "fft2", # type of transform to use
+  seed = 42
+) # seed for reproducibility
 
 # reduce dimensionality of original sparse data using our transform
 reduced_data <- sketching_transform %*% sparse_data
@@ -87,12 +87,13 @@ sparse_inner <- as.numeric(sparse_inner)
 reduced_inner <- as.numeric(reduced_inner)
 
 plot(reduced_inner ~ sparse_inner,
-     xlab = "Dot products in original space",
-     ylab = "Dot products in reduced space")
+  xlab = "Dot products in original space",
+  ylab = "Dot products in reduced space"
+)
 abline(0, 1, lty = 2)
 
 # check relative errors
-summary(abs(sparse_inner - reduced_inner)/sparse_inner)
+summary(abs(sparse_inner - reduced_inner) / sparse_inner)
 
 # transpose matrices to comply with dist() convention
 sparse_data <- t(sparse_data)
@@ -108,8 +109,7 @@ dist_original_vec <- as.numeric(dist_original)[as.numeric(dist_original) > 0]
 dist_reduced_vec <- as.numeric(dist_reduced)[as.numeric(dist_reduced) > 0]
 
 # check relative errors
-summary(abs(dist_original_vec - dist_reduced_vec)/dist_original_vec)
-
+summary(abs(dist_original_vec - dist_reduced_vec) / dist_original_vec)
 ```
 
 Thus, this example illustrates that `fort` can be used for fast and (approximately) isometric data-independent dimensionality reduction, which can be used to accelerate algorithms that rely on calculating distances or dot products between many high-dimensional vectors, even when typical approaches (e.g., truncated singular value decomposition) may be too expensive.
@@ -119,4 +119,61 @@ by 16 times (which results in a dramatic speed-up when calculating dot products 
 
 ## `fort` for kernel approximation
 
-Example to be inserted here.
+Another practical use case for `fort` is in the stochastic approximation of kernels via the "random kitchen sinks" approach.
+
+For example, in the case of the angular kernel, it can be approximated (in expectation) by the dot product in a space obtained by projecting vectors along random directions and applying a `sign()` non-linearity (i.e. \eqn{\mathbb{E}(sign(w_i^T x)sign(w_i^T y)) = kernel_{angular}(x,y)} if \eqn{w_i} are drawn from an isotropic distribution).
+
+While the typical approach is to use random projections here (via matrix multiplication), it has been shown that using random orthogonal projections (such as the ones provided by `fort`) can reduce the approximation bias.
+
+To see this in practice, let's compare the use of `fort` vs. random projections in this context:
+
+```{r kernel_approximation}
+library(fort)
+
+set.seed(1)
+
+n_samples <- 3000
+n_groups <- 4
+dim_input <- 1024
+noise_level <- 0.2
+
+# assign samples to groups and embed them in N-dimensional space
+data_group <- factor(round((n_groups - 1) * runif(n_samples)))
+data_raw <- matrix(rnorm(dim_input * n_groups), nrow = dim_input) %*% t(model.matrix(~data_group))
+data_raw <- data_raw + noise_level * matrix(rnorm(dim_input * n_samples), nrow = dim_input)
+
+# calculate angular kernel using canonical approach
+data_norm <- data_raw # normalize vectors, to make it easier to calculate angular kernel
+for (i in 1:ncol(data_norm)) data_norm[, i] <- data_norm[, i] / norm(data_norm[, i], "2")
+cosine_kernel <- crossprod(data_norm) # same as dot product when vectors are normalized
+# clamp values to the [-1, 1] range
+cosine_kernel <- matrix(pmax(pmin(1, cosine_kernel), -1), nrow = nrow(cosine_kernel))
+# calculate angular kernel based on cosine kernel
+angular_kernel <- 1 - 2 * acos(cosine_kernel) / pi
+
+# get approximation of angular kernel using fort (with 2x expansion)
+fort1 <- fort(dim_input)
+fort2 <- fort(dim_input)
+angular_expansion <- rbind(fort1 %*% data_raw, fort2 %*% data_raw)
+angular_expansion <- sign(angular_expansion) / sqrt(dim_input * 2)
+
+angular_kernel_fort <- crossprod(angular_expansion)
+
+# estimate angular kernel using random projections (with 2x expansion)
+random_matrix <- matrix(rnorm(2 * dim_input^2), ncol = dim_input)
+angular_expansion <- random_matrix %*% data_raw
+angular_expansion <- sign(angular_expansion) / sqrt(dim_input * 2)
+
+angular_kernel_rndproj <- crossprod(angular_expansion)
+
+# compare both approximations with true kernel
+df <- data.frame(
+  true_kernel = as.numeric(angular_kernel),
+  approximated_kernel_fort = as.numeric(angular_kernel_fort),
+  approximated_kernel_rndproj = as.numeric(angular_kernel_rndproj)
+)
+
+cor(df)
+```
+
+In this case, we see that using random structured orthogonal transforms (like the ones provided by `fort`) provides an approximation of the angular kernel that is faster and more accurate than one obtained using random projections.
