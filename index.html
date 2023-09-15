@@ -88,6 +88,13 @@
 <p>Useful for algorithms that require or benefit from uncorrelated random projections, such as fast dimensionality reduction (e.g., <a href="#links">Johnson-Lindenstrauss transform</a>) or kernel approximation (e.g., <a href="#ref5">random kitchen sinks</a>) methods.</p>
 <p>For more technical details, see the reference page for <a href="https://tomessilva.github.io/fort/reference/fort.html"><code>fort()</code></a>.</p>
 <div class="section level2">
+<h2 id="illustration">Illustration<a class="anchor" aria-label="anchor" href="#illustration"></a>
+</h2>
+<p>This plot shows a speed comparison between using a fort-type transform <em>vs.</em> a matrix multiplication, for different transform sizes, on commodity hardware.</p>
+<p><img src="https://tomessilva.github.io/img/fort_speed.png"></p>
+<p>Here we can see that, for transform sizes in spaces larger than <span class="math inline">ℝ<sup>64</sup></span>, you can obtain significant speed-ups through the use of structured transforms (such as the ones implemented in <code>fort</code>) instead of matrix multiplication. In particular, the time elapsed can go down by 10 to 100 times, for practical transform sizes (e.g., an orthogonal transform in <span class="math inline">ℝ<sup>4096</sup></span> can take a second, instead of a minute).</p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of <code>fort</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
@@ -108,11 +115,11 @@
 <span></span>
 <span><span class="va">matrix_to_transform</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="co"># 4 x 4 identity matrix</span></span>
 <span><span class="op">(</span><span class="va">new_matrix</span> <span class="op">&lt;-</span> <span class="va">fast_transform</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">matrix_to_transform</span><span class="op">)</span> <span class="co"># transformed matrix</span></span>
-<span><span class="co">#&gt;             [,1]        [,2]        [,3]       [,4]</span></span>
-<span><span class="co">#&gt; [1,] -0.08507199  0.04448012  0.19822740 0.97544358</span></span>
-<span><span class="co">#&gt; [2,]  0.95848508 -0.26849697  0.03818877 0.08807578</span></span>
-<span><span class="co">#&gt; [3,] -0.26849697 -0.95848508 -0.08807578 0.03818877</span></span>
-<span><span class="co">#&gt; [4,]  0.04448012  0.08507199 -0.97544358 0.19822740</span></span>
+<span><span class="co">#&gt;            [,1]       [,2]       [,3]       [,4]</span></span>
+<span><span class="co">#&gt; [1,]  0.7267114 -0.1421089  0.3232329 -0.5892504</span></span>
+<span><span class="co">#&gt; [2,]  0.2627348 -0.7866239 -0.5065061  0.2358916</span></span>
+<span><span class="co">#&gt; [3,] -0.5892504 -0.3232329 -0.1421089 -0.7267114</span></span>
+<span><span class="co">#&gt; [4,]  0.2358916  0.5065061 -0.7866239 -0.2627348</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">inverse_transform</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">fast_transform</span><span class="op">)</span><span class="op">)</span> <span class="co"># get inverse transform</span></span>
 <span><span class="co">#&gt; fort linear operation (inverted): R^4 &lt;- [fft2] &lt;- R^4</span></span>
