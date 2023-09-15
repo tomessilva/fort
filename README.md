@@ -24,6 +24,22 @@ projections, such as fast dimensionality reduction (e.g.,
 For more technical details, see the reference page for
 [`fort()`](https://tomessilva.github.io/fort/reference/fort.html).
 
+## Illustration
+
+This plot shows a speed comparison between using a fort-type transform
+*vs.* a matrix multiplication, for different transform sizes, on
+commodity hardware.
+
+![](https://tomessilva.github.io/img/fort_speed.png)
+
+Here we can see that, for transform sizes in spaces larger than
+$\mathbb{R}^{64}$, you can obtain significant speed-ups through the use
+of structured transforms (such as the ones implemented in `fort`)
+instead of matrix multiplication. In particular, the time elapsed can go
+down by 10 to 100 times, for practical transform sizes (e.g., an
+orthogonal transform in $\mathbb{R}^{4096}$ can take a second, instead
+of a minute).
+
 ## Installation
 
 You can install the development version of `fort` from
@@ -51,11 +67,11 @@ library(fort)
 
 matrix_to_transform <- diag(4) # 4 x 4 identity matrix
 (new_matrix <- fast_transform %*% matrix_to_transform) # transformed matrix
-#>             [,1]        [,2]        [,3]       [,4]
-#> [1,] -0.08507199  0.04448012  0.19822740 0.97544358
-#> [2,]  0.95848508 -0.26849697  0.03818877 0.08807578
-#> [3,] -0.26849697 -0.95848508 -0.08807578 0.03818877
-#> [4,]  0.04448012  0.08507199 -0.97544358 0.19822740
+#>            [,1]       [,2]       [,3]       [,4]
+#> [1,]  0.7267114 -0.1421089  0.3232329 -0.5892504
+#> [2,]  0.2627348 -0.7866239 -0.5065061  0.2358916
+#> [3,] -0.5892504 -0.3232329 -0.1421089 -0.7267114
+#> [4,]  0.2358916  0.5065061 -0.7866239 -0.2627348
 
 (inverse_transform <- solve(fast_transform)) # get inverse transform
 #> fort linear operation (inverted): R^4 <- [fft2] <- R^4

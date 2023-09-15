@@ -27,6 +27,14 @@ Useful for algorithms that require or benefit from uncorrelated random projectio
 
 For more technical details, see the reference page for [`fort()`](https://tomessilva.github.io/fort/reference/fort.html).
 
+## Illustration
+
+This plot shows a speed comparison between using a fort-type transform *vs.* a matrix multiplication, for different transform sizes, on commodity hardware.
+
+![](https://tomessilva.github.io/img/fort_speed.png)
+
+Here we can see that, for transform sizes in spaces larger than $\mathbb{R}^{64}$, you can obtain significant speed-ups through the use of structured transforms (such as the ones implemented in `fort`) instead of matrix multiplication. In particular, the time elapsed can go down by 10 to 100 times, for practical transform sizes (e.g., an orthogonal transform in $\mathbb{R}^{4096}$ can take a second, instead of a minute).
+
 ## Installation
 
 You can install the development version of `fort` from [GitHub](https://github.com/) with:
