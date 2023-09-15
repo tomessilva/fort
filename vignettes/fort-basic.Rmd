@@ -121,7 +121,7 @@ by 16 times (which results in a dramatic speed-up when calculating dot products 
 
 Another practical use case for `fort` is in the stochastic approximation of kernels via the "random kitchen sinks" approach.
 
-For example, in the case of the angular kernel, it can be approximated (in expectation) by the dot product in a space obtained by projecting vectors along random directions and applying a `sign()` non-linearity (i.e. \eqn{\mathbb{E}(sign(w_i^T x)sign(w_i^T y)) = kernel_{angular}(x,y)} if \eqn{w_i} are drawn from an isotropic distribution).
+For example, in the case of the angular kernel, it can be approximated (in expectation) by the dot product in a space obtained by projecting vectors along random directions and applying a `sign()` non-linearity (i.e. $\mathbb{E}(sign(w_i^T x)sign(w_i^T y)) = kernel_{angular}(x,y)$ if $w_i$ are drawn from an isotropic distribution).
 
 While the typical approach is to use random projections here (via matrix multiplication), it has been shown that using random orthogonal projections (such as the ones provided by `fort`) can reduce the approximation bias.
 
@@ -139,13 +139,20 @@ noise_level <- 0.2
 
 # assign samples to groups and embed them in N-dimensional space
 data_group <- factor(round((n_groups - 1) * runif(n_samples)))
-data_raw <- matrix(rnorm(dim_input * n_groups), nrow = dim_input) %*% t(model.matrix(~data_group))
-data_raw <- data_raw + noise_level * matrix(rnorm(dim_input * n_samples), nrow = dim_input)
+group_effects <- matrix(rnorm(dim_input * n_groups), nrow = dim_input)
+noise_matrix <- matrix(rnorm(dim_input * n_samples), nrow = dim_input)
+
+data_raw <- group_effects %*% t(model.matrix(~data_group))
+data_raw <- data_raw + noise_level * noise_matrix
 
 # calculate angular kernel using canonical approach
-data_norm <- data_raw # normalize vectors, to make it easier to calculate angular kernel
-for (i in 1:ncol(data_norm)) data_norm[, i] <- data_norm[, i] / norm(data_norm[, i], "2")
-cosine_kernel <- crossprod(data_norm) # same as dot product when vectors are normalized
+# first normalize vectors, to make it easier to calculate angular kernel
+data_norm <- data_raw
+for (i in 1:ncol(data_norm)) {
+  data_norm[, i] <- data_norm[, i] / norm(data_norm[, i], "2")
+}
+# the cosine kernel is the same as dot product when vectors are normalized
+cosine_kernel <- crossprod(data_norm)
 # clamp values to the [-1, 1] range
 cosine_kernel <- matrix(pmax(pmin(1, cosine_kernel), -1), nrow = nrow(cosine_kernel))
 # calculate angular kernel based on cosine kernel
