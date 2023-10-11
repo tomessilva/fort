@@ -1,0 +1,165 @@
+test_that("FastTransform$evaluate() works correctly", {
+  n_tests <- 4
+  tol_ <- 10^-8
+  sizes_ <- ceiling(pi * (1:n_tests))
+  for (i in sizes_) {
+    tmp_obj <- fort(i)  # create fort object
+    tmp_data <- diag(i) # create test matrix
+    tmp_result_1 <- tmp_obj %*% tmp_data   # usual evaluation
+    tmp_result_2 <- tmp_obj %***% tmp_data # unsafe evaluation
+    tmp_result_3 <- tmp_obj$evaluate(tmp_data) # call evaluate()
+    tmp_result_4 <- (tmp_data |> tmp_obj$evaluate()) # use pipe to evaluate
+    expect_true(all.equal(tmp_result_1, tmp_result_3, tolerance = tol_),
+                paste0("evaluate() call does not match usual evaluation",
+                       " (size ", i, ")"))
+    expect_true(all.equal(tmp_result_2, tmp_result_3, tolerance = tol_),
+                paste0("evaluate() call does not match unsafe evaluation",
+                       " (size ", i, ")"))
+    expect_true(all.equal(tmp_result_1, tmp_result_4, tolerance = tol_),
+                paste0("evaluate() call with pipe does not match usual",
+                       " evaluation (size ", i, ")"))
+    expect_true(all.equal(tmp_result_2, tmp_result_4, tolerance = tol_),
+                paste0("evaluate() call with pipe does not match unsafe",
+                       " evaluation (size ", i, ")"))
+    expect_true(all.equal(tmp_result_3, tmp_result_4, tolerance = tol_),
+                paste0("evaluate() calls with and without pipe do not match",
+                       " (size ", i, ")"))
+  }
+})
+
+test_that("FastTransform$get_dim(), get_nrow() and get_ncol() work correctly", {
+  n_tests <- 4
+  tol_ <- 10^-8
+  sizes_ <- ceiling(sqrt(pi) * (1:n_tests))
+  for (i in sizes_) {
+    m <- fort(i, i)
+    expect_true(all.equal(m$get_nrow(), i, tolerance = tol_),
+                "get_nrow() is giving wrong values")
+    expect_true(all.equal(m$get_ncol(), i, tolerance = tol_),
+                "get_ncol() is giving wrong values")
+    expect_true(all.equal(m$get_dim()[1], m$get_nrow(), tolerance = tol_),
+                "get_dim()[1] and get_nrow() do not match")
+    expect_true(all.equal(m$get_dim()[2], m$get_ncol(), tolerance = tol_),
+                "get_dim()[2] and get_ncol() do not match")
+    m <- fort(1, i)
+    expect_true(all.equal(m$get_nrow(), i, tolerance = tol_),
+                "get_nrow() is giving wrong values")
+    expect_true(all.equal(m$get_ncol(), 1, tolerance = tol_),
+                "get_ncol() is giving wrong values")
+    expect_true(all.equal(m$get_dim()[1], m$get_nrow(), tolerance = tol_),
+                "get_dim()[1] and get_nrow() do not match")
+    expect_true(all.equal(m$get_dim()[2], m$get_ncol(), tolerance = tol_),
+                "get_dim()[2] and get_ncol() do not match")
+    m <- fort(i, 2)
+    expect_true(all.equal(m$get_nrow(), 2, tolerance = tol_),
+                "get_nrow() is giving wrong values")
+    expect_true(all.equal(m$get_ncol(), i, tolerance = tol_),
+                "get_ncol() is giving wrong values")
+    expect_true(all.equal(m$get_dim()[1], m$get_nrow(), tolerance = tol_),
+                "get_dim()[1] and get_nrow() do not match")
+    expect_true(all.equal(m$get_dim()[2], m$get_ncol(), tolerance = tol_),
+                "get_dim()[2] and get_ncol() do not match")
+    # test under inverse
+    m <- m$get_inverse()
+    expect_true(all.equal(m$get_nrow(), i, tolerance = tol_),
+                "get_nrow() is giving wrong values")
+    expect_true(all.equal(m$get_ncol(), 2, tolerance = tol_),
+                "get_ncol() is giving wrong values")
+    expect_true(all.equal(m$get_dim()[1], m$get_nrow(), tolerance = tol_),
+                "get_dim()[1] and get_nrow() do not match")
+    expect_true(all.equal(m$get_dim()[2], m$get_ncol(), tolerance = tol_),
+                "get_dim()[2] and get_ncol() do not match")
+
+  }
+})
+
+test_that("FastTransform$get_inverse() works correctly", {
+  tol_ <- 10^-8
+  n_tests <- 8
+  for (i in 2:(n_tests+1)) {
+    tmp_obj <- fort(i, i)
+    tmp_obj_inv <- tmp_obj$get_inverse()
+    expect_true(.are_similar_ft(tmp_obj, tmp_obj_inv$get_inverse(), tolerance = tol_),
+                "double inversion does not recover original object")
+  }
+})
+
+test_that("FastTransform$get_transpose() works correctly", {
+  tol_ <- 10^-8
+  n_tests <- 8
+  for (i in (2^(1:n_tests))) {
+    tmp_obj <- fort(i, i)
+    tmp_obj_inv <- tmp_obj$get_transpose()
+    expect_true(.are_similar_ft(tmp_obj, tmp_obj_inv$get_transpose(), tolerance = tol_),
+                "double transposition does not recover original object")
+  }
+})
+
+test_that("FastTransform$get_logdet() works correctly", {
+  tol_ <- 10^-8
+  n_tests <- 8
+  for (i in 2:(n_tests+1)) {
+    tmp_obj <- fort(i, i)
+    tmp_obj_logdet <- tmp_obj$get_logdet()
+    expect_true(is.list(tmp_obj_logdet),
+                "output object is not a list")
+    expect_true("det" %in% class(tmp_obj_logdet),
+                "output object is not of class 'det'")
+    expect_true("modulus" %in% names(tmp_obj_logdet),
+                "output object does not contain field 'modulus'")
+    expect_true("sign" %in% names(tmp_obj_logdet),
+                "output object does not contain field 'sign'")
+    expect_true(attr(tmp_obj_logdet$modulus,"logarithm"),
+                "output object is det and NOT logdet")
+  }
+})
+
+test_that("FastTransform$get_norm() works correctly", {
+  types_to_test <- c("o", "i", "f", "m", "1", "2")
+  n_tests <- 4
+  for (i in (2^(1:n_tests))) {
+    tmp_obj <- fort(i, i)
+    for (cur_type in types_to_test) {
+      tmp_obj_norm <- tmp_obj$get_norm(type = cur_type)
+      expect_true(is.numeric(tmp_obj_norm),
+                  "returned value is not numeric")
+      expect_true(length(tmp_obj_norm) == 1,
+                  "returned value is not of length 1")
+    }
+  }
+})
+
+test_that("FastTransform$get_norm_margin() works correctly", {
+  types_to_test <- c("o", "i", "f", "m", "1", "2")
+  n_tests <- 2
+  for (i in (4^(1:n_tests))) {
+    tmp_obj <- fort(i, 1) # nrow = 1, ncol = i
+    for (cur_type in types_to_test) {
+      tmp_obj_norm_row <- tmp_obj$get_norm_margin(type = cur_type, by = 1)
+      expect_true(is.numeric(tmp_obj_norm_row),
+                  "returned row norm is not numeric")
+      expect_true(length(tmp_obj_norm_row) == 1,
+                  "returned row norm is not of length 1")
+
+      tmp_obj_norm_col <- tmp_obj$get_norm_margin(type = cur_type, by = 2)
+      expect_true(is.numeric(tmp_obj_norm_col),
+                  "returned col norm is not numeric")
+      expect_true(length(tmp_obj_norm_col) == i,
+                  paste0("returned col norm is not of length ", i))
+
+    }
+  }
+})
+
+test_that("FastTransform$as_matrix() works correctly", {
+  n_tests <- 2
+  tol_ <- 10^-8
+  for (i in (2^(1:n_tests))) {
+    tmp_obj <- fort(i, 1)
+    tmp_mtrx <- tmp_obj$as_matrix()
+    expect_true(is.matrix(tmp_mtrx),
+                "output object is not of matrix type")
+    expect_true(all.equal(dim(tmp_obj),dim(tmp_mtrx),tolerance = tol_),
+                "output object dimensions are not correct")
+  }
+})
