@@ -1,3 +1,21 @@
+test_that(".is_valid_ft() works correctly", {
+  tmp_obj <- fort(1) # create normal FastTransform object
+  expect_true(.is_valid_ft(tmp_obj),
+              "fort object is not being recognized as valid")
+  expect_true(.is_valid_ft(tmp_obj, quick = TRUE),
+              "fort object is not being recognized as valid (quick = TRUE)")
+  tmp_obj_2 <- list(a="1",b=1) # create object that is not FastTransform
+  expect_false(.is_valid_ft(tmp_obj_2),
+              "list is being recognized as valid")
+  expect_false(.is_valid_ft(tmp_obj_2, quick = TRUE),
+              "list is being recognized as valid (quick = TRUE)")
+  tmp_obj_3 <- FastTransform$new() # create invalid object
+  expect_false(.is_valid_ft(tmp_obj_3),
+               "invalid FastTransform is being recognized as valid")
+  expect_false(.is_valid_ft(tmp_obj_3, quick = TRUE),
+               "invalid FastTransform is being recognized as valid (quick = TRUE)")
+})
+
 test_that("FastTransform$evaluate() works correctly", {
   n_tests <- 4
   tol_ <- 10^-8
@@ -162,4 +180,34 @@ test_that("FastTransform$as_matrix() works correctly", {
     expect_true(all.equal(dim(tmp_obj),dim(tmp_mtrx),tolerance = tol_),
                 "output object dimensions are not correct")
   }
+})
+
+test_that("FastTransform$print() works correctly", {
+  # redirect console output to a temporary file
+  tmp_file <- tempfile()
+  sink(tmp_file)
+  on.exit({
+    # restore console output
+    sink()
+    # remove temporary file, if it exists
+    if (file.exists(tmp_file)) unlink(tmp_file)
+  })
+  tmp_obj <- fort(1)
+  expect_true(.is_valid_ft(tmp_obj$print()),
+              "self is not being returned invisibly")
+})
+
+test_that("FastTransform$summary() works correctly", {
+  # redirect console output to a temporary file
+  tmp_file <- tempfile()
+  sink(tmp_file)
+  on.exit({
+    # restore console output
+    sink()
+    # remove temporary file, if it exists
+    if (file.exists(tmp_file)) unlink(tmp_file)
+  })
+  tmp_obj <- fort(1)
+  expect_true(.is_valid_ft(tmp_obj$summary()),
+              "self is not being returned invisibly")
 })
