@@ -104,17 +104,17 @@ inverse of <code>a</code>; if parameter <code>b</code> is missing).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="fort.html">fort</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">inv_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="co"># inverse of a</span></span></span>
 <span class="r-in"><span><span class="va">inv_a</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="co"># applying the inverse of a</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]        [,2]        [,3]        [,4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.30083416 -0.04075474  0.95194567  0.04046363</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.95194567 -0.04046363 -0.30083416 -0.04075474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.01139914  0.27885409  0.05628778 -0.95861470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.05628778 -0.95861470 -0.01139914 -0.27885409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              [,1]         [,2]        [,3]        [,4]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.990710820  0.094595616  0.03370796  0.09169250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.009202852 -0.097257637 -0.93380463  0.34418770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.094595616 -0.990710820  0.09169250 -0.03370796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.097257637 -0.009202852  0.34418770  0.93380463</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">a</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="co"># should give the same output</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             [,1]        [,2]        [,3]        [,4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.30083416 -0.04075474  0.95194567  0.04046363</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.95194567 -0.04046363 -0.30083416 -0.04075474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.01139914  0.27885409  0.05628778 -0.95861470</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.05628778 -0.95861470 -0.01139914 -0.27885409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              [,1]         [,2]        [,3]        [,4]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.990710820  0.094595616  0.03370796  0.09169250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.009202852 -0.097257637 -0.93380463  0.34418770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.094595616 -0.990710820  0.09169250 -0.03370796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.097257637 -0.009202852  0.34418770  0.93380463</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
