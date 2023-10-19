@@ -123,7 +123,7 @@ in practice.</p>
 <span><span class="co"># verify inversion</span></span>
 <span><span class="co"># (Frobenius norm of difference should be small)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">my_matrix</span> <span class="op">-</span> <span class="va">my_matrix_estimate</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3.070732e-15</span></span>
+<span><span class="co">#&gt; [1] 4.871624e-14</span></span>
 <span></span>
 <span><span class="co"># get the transform in matrix format</span></span>
 <span><span class="va">my_transform_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">my_transform</span><span class="op">)</span></span></code></pre></div>
@@ -160,7 +160,7 @@ transform</a>:</p>
 <span><span class="co"># (the second calculation should be faster)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">sparse_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">sparse_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.084   0.001   0.051</span></span>
+<span><span class="co">#&gt;   0.072   0.004   0.047</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">reduced_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">reduced_data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">reduced_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
 <span><span class="co">#&gt;   0.006   0.000   0.003</span></span>
@@ -180,7 +180,7 @@ transform</a>:</p>
 <span><span class="co"># check relative errors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">sparse_inner</span> <span class="op">-</span> <span class="va">reduced_inner</span><span class="op">)</span> <span class="op">/</span> <span class="va">sparse_inner</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></span>
-<span><span class="co">#&gt; 0.0000006 0.0475823 0.1009385 0.1201908 0.1730575 0.7499288</span></span>
+<span><span class="co">#&gt; 0.0000002 0.0473251 0.1005199 0.1192044 0.1716172 0.7092896</span></span>
 <span></span>
 <span><span class="co"># transpose matrices to comply with dist() convention</span></span>
 <span><span class="va">sparse_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span></span>
@@ -190,10 +190,10 @@ transform</a>:</p>
 <span><span class="co"># (the second calculation should be faster)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">dist_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">sparse_data</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   2.094   0.000   2.095</span></span>
+<span><span class="co">#&gt;   1.947   0.008   1.963</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">dist_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">reduced_data</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.095   0.000   0.095</span></span>
+<span><span class="co">#&gt;   0.111   0.000   0.112</span></span>
 <span></span>
 <span><span class="co"># vectorize distances and remove diagonal</span></span>
 <span><span class="va">dist_original_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_original</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">dist_original</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span></span>
@@ -202,7 +202,7 @@ transform</a>:</p>
 <span><span class="co"># check relative errors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">dist_original_vec</span> <span class="op">-</span> <span class="va">dist_reduced_vec</span><span class="op">)</span> <span class="op">/</span> <span class="va">dist_original_vec</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></span>
-<span><span class="co">#&gt; 3.200e-07 1.924e-02 4.068e-02 4.819e-02 6.947e-02 3.122e-01</span></span></code></pre></div>
+<span><span class="co">#&gt; 7.000e-08 1.899e-02 4.031e-02 4.764e-02 6.865e-02 2.987e-01</span></span></code></pre></div>
 <p>Thus, this example illustrates that <code>fort</code> can be used for
 fast and (approximately) isometric data-independent dimensionality
 reduction, which can be used to accelerate algorithms that rely on
