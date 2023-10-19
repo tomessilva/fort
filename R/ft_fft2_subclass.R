@@ -132,8 +132,8 @@ FastTransformFFT2 <- R6::R6Class(
         X2 <- x_[p_[["p2i_im"]], , drop = FALSE]
         rm(x_)
       } else {
-        X1 <- x[p_[["p2i_re"]], ]
-        X2 <- x[p_[["p2i_im"]], ]
+        X1 <- x[p_[["p2i_re"]], , drop = FALSE]
+        X2 <- x[p_[["p2i_im"]], , drop = FALSE]
       }
       # apply transform (call external C++ function)
       Xout <- .Call(`_fort_FORT_CPP_FFT2_rev`,
