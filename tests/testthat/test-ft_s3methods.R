@@ -87,7 +87,7 @@ test_that("solve.FastTransform() works correctly", {
 test_that("determinant.FastTransform() works ok with logarithm=FALSE", {
   test_det <- determinant(fort(4),logarithm = FALSE)
   expect_true(is.list(test_det))
-  expect_true(inherits(test_det),"det")
+  expect_true(inherits(test_det,"det"))
   expect_false(attr(test_det$modulus,"logarithm"))
 })
 
