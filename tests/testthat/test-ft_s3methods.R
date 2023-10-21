@@ -83,3 +83,15 @@ test_that("solve.FastTransform() works correctly", {
     expect_equal(tmp_y_1,tmp_data,tolerance=tol_)
   }
 })
+
+test_that("determinant.FastTransform() works ok with logarithm=FALSE", {
+  test_det <- determinant(fort(4),logarithm = FALSE)
+  expect_true(is.list(test_det))
+  expect_true(inherits(test_det),"det")
+  expect_false(attr(test_det$modulus,"logarithm"))
+})
+
+test_that("t() warns user when used on non-invertible transforms", {
+  tmp_fort <- fort(3,4)
+  suppressWarnings(expect_warning(t(tmp_fort)))
+})
