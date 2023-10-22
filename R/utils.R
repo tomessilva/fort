@@ -22,34 +22,36 @@
     fft2 = "FastTransformFFT2"
   )
   if ("fort.type_list" %in% names(.Options)) {
-    # extra types have been defined by the user
-    # add extra fort types to base list
-    # overwriting existing ones, if needed
     new_types <- getOption("fort.type_list")
-    if (!is.list(new_types)) {
-      stop(
-        "malformed .Options$fort.type_list",
-        " (needs to be a list)"
-      )
-    }
-    for (i in 1:length(new_types)) {
-      cur_type <- names(new_types)[i]
-      cur_value <- new_types[[i]]
-      if (!is.character(cur_value)) {
+    if (!is.null(new_types)) {
+      # extra types have been defined by the user
+      # add extra fort types to base list
+      # overwriting existing ones, if needed
+      if (!is.list(new_types)) {
         stop(
-          "malformed field '", cur_type,
-          "' in .Options$fort.type_list",
-          " (needs to be of character type)"
+          "malformed .Options$fort.type_list",
+          " (needs to be a list)"
         )
       }
-      if (cur_value == "FastTransform") {
-        stop(
-          "the general `FastTransform`",
-          " class cannot be used in",
-          " .Options$fort.type_list"
-        )
+      for (i in 1:length(new_types)) {
+        cur_type <- names(new_types)[i]
+        cur_value <- new_types[[i]]
+        if (!is.character(cur_value)) {
+          stop(
+            "malformed field '", cur_type,
+            "' in .Options$fort.type_list",
+            " (needs to be of character type)"
+          )
+        }
+        if (cur_value == "FastTransform") {
+          stop(
+            "the general `FastTransform`",
+            " class cannot be used in",
+            " .Options$fort.type_list"
+          )
+        }
+        base_types[[cur_type]] <- cur_value
       }
-      base_types[[cur_type]] <- cur_value
     }
   }
   base_types
