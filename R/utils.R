@@ -185,7 +185,7 @@
           "invalid `type` when calling fort(), since '",
           fort_type, "' is not a valid 'FastTransform'",
           " subclass; please choose one of: ",
-          paste0(available_methods, collapse = ", ")
+          paste0(names(available_methods), collapse = ", ")
         )
       }
     } else {
@@ -194,7 +194,7 @@
         "invalid `type` when calling fort(), since '",
         fort_type, "' does not exist; please ",
         "choose one of: ",
-        paste0(available_methods, collapse = ", ")
+        paste0(names(available_methods), collapse = ", ")
       )
     }
     stop(error_message)
@@ -211,7 +211,7 @@
   error_message <- paste0(
     "invalid `type` when calling fort(); please ",
     "choose one of: ",
-    paste0(available_methods, collapse = ", ")
+    paste0(names(available_methods), collapse = ", ")
   )
   stop(error_message)
 }
