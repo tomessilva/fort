@@ -125,3 +125,76 @@ test_that(".pseudoinvert_permutation() is working correctly", {
                 paste0("failed inverting permutation of size ", i))
   }
 })
+
+test_that(".get_available_fort_types() works with custom fort types", {
+  # check if custom types have already been set
+  cur_list <- NULL
+  if ("fort.type_list" %in% names(.Options)) {
+    cur_list <- getOption("fort.type_list")
+    out_list <- cur_list
+  }
+  if (is.null(cur_list)) {
+    cur_list <- list(default = "FastTransformFFT2")
+    out_list <- NULL
+  }
+  if (!is.list(cur_list)) {
+    cur_list <- list(default = "FastTransformFFT2")
+    out_list <- NULL
+  }
+  # add handler to restore state
+  on.exit({
+    options(fort.type_list = out_list)
+  })
+  # now add custom type to default list
+  cur_list[["test_type"]] <- "FastTransformFFT2"
+  options(fort.type_list = cur_list)
+  # check that the custom type is added
+  expect_true("test_type" %in% names(.get_available_fort_types()))
+  # now try malformed inputs
+  bad_list <- c(1,2,3)
+  options(fort.type_list = bad_list)
+  expect_error(.get_available_fort_types())
+  bad_list <- list(default = 1, something = 2)
+  options(fort.type_list = bad_list)
+  expect_error(.get_available_fort_types())
+  bad_list <- list(default = "FastTransform")
+  options(fort.type_list = bad_list)
+  expect_error(.get_available_fort_types())
+})
+
+test_that(".get_dims_from_inputs() handles bad inputs correctly", {
+  expect_error(.get_dims_from_inputs("a"))
+  expect_error(.get_dims_from_inputs(1, "a"))
+  expect_error(.get_dims_from_inputs(-1))
+  expect_error(.get_dims_from_inputs(1, -1))
+})
+
+test_that(".get_fort_constructor() handles bad input correctly", {
+  expect_error(.get_fort_constructor("fkdsfdskjn"))
+  expect_error(.get_fort_constructor("fort"))
+})
+
+test_that(".get_printing_symbols() handles NULL options", {
+  current_val <- getOption("fort.avoid_unicode")
+  if (is.null(current_val)) current_val <- FALSE
+  if (!is.logical(current_val)) current_val <- FALSE
+  on.exit({
+    options(fort.avoid_unicode = current_val)
+  })
+  # now set option to NULL
+  options(fort.avoid_unicode = NULL)
+  # perform tests
+  tmp_obj_1 <- .get_printing_symbols()
+  tmp_obj_2 <- .get_printing_symbols(simple = FALSE)
+  tmp_obj_3 <- .get_printing_symbols(simple = TRUE)
+  expect_true(is.list(tmp_obj_1), "does not return a list (without input)")
+  expect_true(is.list(tmp_obj_2), "does not return a list when input=FALSE")
+  expect_true(is.list(tmp_obj_3), "does not return a list when input=TRUE")
+})
+
+test_that(".pseudoinvert_scaling() handles zeros correctly", {
+  tmp_vector <- exp(rnorm(10))
+  tmp_vector[1] <- 0
+  inv_vector <- .pseudoinvert_scaling(tmp_vector)
+  expect_equal(inv_vector[1], 0)
+})
