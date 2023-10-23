@@ -100,6 +100,10 @@ test_that("FastTransform$get_inverse() works correctly", {
     expect_true(.are_similar_ft(tmp_obj, tmp_obj_inv$get_inverse(), tolerance = tol_),
                 "double inversion does not recover original object")
   }
+  # test handling of invalid objects
+  tmp_obj <- fort(2)
+  tmp_obj$blocksize <- NULL
+  expect_error(tmp_obj$get_inverse())
 })
 
 test_that("FastTransform$get_transpose() works correctly", {
@@ -129,6 +133,14 @@ test_that("FastTransform$get_logdet() works correctly", {
                 "output object does not contain field 'sign'")
     expect_true(attr(tmp_obj_logdet$modulus,"logarithm"),
                 "output object is det and NOT logdet")
+    # check inverse and cache handling
+    tmp_obj_logdet2 <- tmp_obj$get_logdet()
+    expect_true(is.list(tmp_obj_logdet2))
+    tmp_obj_inv <- solve(tmp_obj)
+    tmp_obj_logdet3 <- tmp_obj_inv$get_logdet()
+    expect_true(is.list(tmp_obj_logdet3))
+    tmp_obj_logdet4 <- tmp_obj_inv$get_logdet()
+    expect_true(is.list(tmp_obj_logdet4))
   }
 })
 
@@ -145,6 +157,8 @@ test_that("FastTransform$get_norm() works correctly", {
                   "returned value is not of length 1")
     }
   }
+  # test error handling
+  expect_error(tmp_obj_norm <- tmp_obj$get_norm(type = "x"))
 })
 
 test_that("FastTransform$get_norm_margin() works correctly", {
@@ -167,6 +181,8 @@ test_that("FastTransform$get_norm_margin() works correctly", {
 
     }
   }
+  # test error handling
+  expect_error(tmp_obj_norm <- tmp_obj$get_norm_margin(type = "x"))
 })
 
 test_that("FastTransform$as_matrix() works correctly", {
@@ -180,6 +196,9 @@ test_that("FastTransform$as_matrix() works correctly", {
     expect_true(all.equal(dim(tmp_obj),dim(tmp_mtrx),tolerance = tol_),
                 "output object dimensions are not correct")
   }
+  # test error handling
+  tmp_obj$blocksize <- NULL
+  expect_error(tmp_obj$as_matrix())
 })
 
 test_that("FastTransform$print() works correctly", {
@@ -210,4 +229,56 @@ test_that("FastTransform$summary() works correctly", {
   tmp_obj <- fort(1)
   expect_true(.is_valid_ft(tmp_obj$summary()),
               "self is not being returned invisibly")
+})
+
+test_that("default FastTransform placeholder functions return NULL", {
+  # create invalid FastTransform object
+  tmp_ft <- FastTransform$new()
+  # test placeholder functions
+  expect_true(is.null(tmp_ft$fwd_eval(NULL)))
+  expect_true(is.null(tmp_ft$rev_eval(NULL)))
+  expect_true(is.null(tmp_ft$calculate_rev_par()))
+})
+
+test_that("FastTransform$evaluate() handles odd inputs correctly", {
+  tmp_fort <- fort(2)
+  tmp_data <- diag(2)
+  # evaluate with vector input
+  expect_true(is.matrix(tmp_fort %*% 1:2))
+  expect_true(is.matrix(fort(1,16) %*% 1:8))
+  # evaluate with input of wrong type
+  expect_error(tmp_fort$evaluate("a"))
+  # evaluate with non-conforming inputs
+  expect_error(tmp_fort$evaluate(1:10))
+  expect_error(tmp_fort$evaluate(matrix(1:12,nrow=3,ncol=4)))
+  # make FastTransform invalid
+  tmp_fort$blocksize <- NULL
+  expect_error(tmp_fort$evaluate(tmp_data))
+})
+
+test_that("FastTransform$get_n_par() works correctly", {
+  # test invertible
+  tests <- c(2, 4, 8, 16)
+  for (cur_size in tests) {
+    tmp_fort <- fort(cur_size)
+    tmp_par <- tmp_fort$get_n_par()
+    expect_true(is.numeric(tmp_par))
+    expect_equal(tmp_par, length(unlist(tmp_fort$fwd_par)))
+  }
+  # test non-invertible
+  tests <- list(c(1, 2),
+                c(2, 1),
+                c(3, 16))
+  for (cur_size in tests) {
+    tmp_fort <- solve(fort(cur_size))
+    tmp_par <- tmp_fort$get_n_par()
+    expect_true(is.numeric(tmp_par))
+    expect_equal(tmp_par, prod(cur_size))
+  }
+})
+
+test_that("FastTransform$get_transpose() works for non-invertible objects", {
+  tmp_fort <- fort(3,5)
+  tmp_matrix <- suppressWarnings(tmp_fort$get_transpose())
+  expect_true(is.matrix(tmp_matrix))
 })
