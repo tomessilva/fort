@@ -14,6 +14,10 @@ test_that(".is_valid_ft() works correctly", {
                "invalid FastTransform is being recognized as valid")
   expect_false(.is_valid_ft(tmp_obj_3, quick = TRUE),
                "invalid FastTransform is being recognized as valid (quick = TRUE)")
+  tmp_obj_4 <- list(blocksize=2) # create fake FastTransform object
+  class(tmp_obj_4) <- "FastTransform"
+  expect_false(.is_valid_ft(tmp_obj_4, quick = FALSE),
+               "fake FastTransform is being recognized as valid")
 })
 
 test_that("FastTransform$evaluate() works correctly", {
@@ -195,6 +199,14 @@ test_that("FastTransform$as_matrix() works correctly", {
                 "output object is not of matrix type")
     expect_true(all.equal(dim(tmp_obj),dim(tmp_mtrx),tolerance = tol_),
                 "output object dimensions are not correct")
+    tmp_obj <- fort(i, 1)
+    tmp_obj_inv <- solve(tmp_obj)
+    tmp_matrix_inv <- tmp_obj_inv$as_matrix()
+    expect_true(is.matrix(tmp_matrix_inv),
+                "output object is not of matrix type")
+    expect_true(all.equal(dim(tmp_obj_inv),dim(tmp_matrix_inv),tolerance = tol_),
+                "output object dimensions are not correct")
+
   }
   # test error handling
   tmp_obj$blocksize <- NULL
@@ -214,6 +226,12 @@ test_that("FastTransform$print() works correctly", {
   tmp_obj <- fort(1)
   expect_true(.is_valid_ft(tmp_obj$print()),
               "self is not being returned invisibly")
+  tmp_obj <- solve(fort(2,3))
+  expect_true(.is_valid_ft(tmp_obj$print()),
+              "self is not being returned invisibly")
+  # check error handling
+  tmp_obj$blocksize <- NULL # make invalid object
+  expect_error(tmp_obj$print())
 })
 
 test_that("FastTransform$summary() works correctly", {
@@ -229,6 +247,12 @@ test_that("FastTransform$summary() works correctly", {
   tmp_obj <- fort(1)
   expect_true(.is_valid_ft(tmp_obj$summary()),
               "self is not being returned invisibly")
+  tmp_obj <- solve(fort(2,3))
+  expect_true(.is_valid_ft(tmp_obj$summary()),
+              "self is not being returned invisibly")
+  # check error handling
+  tmp_obj$blocksize <- NULL # make invalid object
+  expect_error(tmp_obj$summary())
 })
 
 test_that("default FastTransform placeholder functions return NULL", {
